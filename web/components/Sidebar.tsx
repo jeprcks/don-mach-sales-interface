@@ -1,10 +1,25 @@
 import Link from 'next/link';
 import { useState } from 'react';
+import { CSSProperties } from 'react';
 
-export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+interface Styles {
+  sidebar: CSSProperties;
+  toggleButton: CSSProperties;
+  avatarContainer: CSSProperties;
+  avatar: CSSProperties;
+  avatarName: CSSProperties;
+  list: CSSProperties;
+  listItem: CSSProperties;
+  link: CSSProperties;
+  linkText: CSSProperties;
+  icon: CSSProperties;
+  linkHover: CSSProperties;
+}
 
-  const toggleSidebar = () => setCollapsed(!collapsed);
+export default function Sidebar(): JSX.Element {
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+
+  const toggleSidebar = (): void => setCollapsed(!collapsed);
 
   return (
     <div style={{ ...styles.sidebar, width: collapsed ? '80px' : '240px' }}>
@@ -37,7 +52,7 @@ export default function Sidebar() {
           </Link>
         </li>
         <li style={styles.listItem}>
-          <Link href="/sales" style={styles.link}>
+          <Link href="/sale" style={styles.link}>
             <i style={styles.icon} className="fas fa-chart-line"></i>
             {!collapsed && <span style={styles.linkText}>Sales</span>}
           </Link>
@@ -48,12 +63,6 @@ export default function Sidebar() {
             {!collapsed && <span style={styles.linkText}>Transaction History</span>}
           </Link>
         </li>
-        <li style={styles.listItem}>
-          <Link href="/createuser" style={styles.link}>
-            <i style={styles.icon} className="fas fa-user-plus"></i>
-            {!collapsed && <span style={styles.linkText}>Create User</span>}
-          </Link>
-        </li>
         {/* <li style={styles.listItem}>
           <Link href="/settings" style={styles.link}>
             <i style={styles.icon} className="fas fa-cog"></i>
@@ -61,7 +70,7 @@ export default function Sidebar() {
           </Link>
         </li> */}
         <li style={styles.listItem}>
-          <Link href="/logout" style={styles.link}>
+          <Link href="/login" style={styles.link}>
             <i style={styles.icon} className="fas fa-sign-out-alt"></i>
             {!collapsed && <span style={styles.linkText}>Logout</span>}
           </Link>
@@ -71,7 +80,7 @@ export default function Sidebar() {
   );
 }
 
-const styles = {
+const styles: Styles = {
   sidebar: {
     backgroundColor: '#2c3e50',
     color: '#ecf0f1',

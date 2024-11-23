@@ -1,6 +1,27 @@
 import React from 'react';
 import Image from 'next/image'; // Import Next.js Image component
 
+// Define interfaces for the component props and product type
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  image: string;
+}
+
+interface ProductListProps {
+  products: Product[];
+  editingProductId: number | null;
+  editingProduct: Product;
+  handleEditClick: (product: Product) => void;
+  handleDeleteClick: (id: number) => void;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleSaveClick: () => void;
+  handleImageChange: (e: React.ChangeEvent<HTMLInputElement>, productId: number) => void;
+}
+
 export default function ProductList({
   products,
   editingProductId,
@@ -9,8 +30,8 @@ export default function ProductList({
   handleDeleteClick,
   handleInputChange,
   handleSaveClick,
-  handleImageChange, // Add this new prop for handling image changes
-}) {
+  handleImageChange,
+}: ProductListProps) {
   return (
     <div style={styles.productList}>
       {products.map((product) => (
@@ -104,7 +125,8 @@ export default function ProductList({
   );
 }
 
-const styles = {
+// Define proper types for styles
+const styles: { [key: string]: React.CSSProperties } = {
   productList: {
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)', // 3 items per row
