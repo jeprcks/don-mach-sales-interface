@@ -65,7 +65,7 @@ export default function LoginPage() {
 
     // Simulated login check
     if (username === 'user' && password === 'password') {
-      router.push('/');
+      router.push('/homepage');
     } else {
       alert('Invalid credentials');
     }

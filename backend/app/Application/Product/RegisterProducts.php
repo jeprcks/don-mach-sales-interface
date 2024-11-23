@@ -1,9 +1,9 @@
 <?php
 
-namespace app\Application\Product;
+namespace App\Application\Product;
 
-use app\Domain\Entities\product;
-use app\Domain\Entities\ProductRepository;
+use App\Domain\Entities\product;
+use App\Domain\Entities\ProductRepository;
 
 class RegisterProducts
 {
@@ -46,5 +46,12 @@ class RegisterProducts
         );
 
         return $this->ProductRepository->update($updatedProduct);
+    }
+
+    public function findAll()
+    {
+        return $this->productRepository->findAll();
+
+        return [];
     }
 }

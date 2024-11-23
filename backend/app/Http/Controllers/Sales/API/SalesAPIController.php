@@ -15,7 +15,9 @@ class SalesAPIController extends Controller
     {
         $this->RegisterSales = $registerSales;
     }
-
+    public function findAll(){
+        return response()->json(['message' => 'success']);
+    }
     public function create(Request $request)
     {
         $data = $request->all();

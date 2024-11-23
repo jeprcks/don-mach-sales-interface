@@ -1,8 +1,8 @@
 <?php
 
-namespace app\Domain\Entities\ProductRepository;
+namespace App\Domain\Entities\ProductRepository;
 
-use app\Domain\Entities\product;
+use App\Domain\Entities\product;
 
 interface ProductRepository
 {
@@ -11,8 +11,6 @@ interface ProductRepository
     public function update(Product $product): void;
 
     public function findByID(string $product_id): void;
-    
-    public function findAll(): array;
 
-    
+    public function findAll(): array;
 }

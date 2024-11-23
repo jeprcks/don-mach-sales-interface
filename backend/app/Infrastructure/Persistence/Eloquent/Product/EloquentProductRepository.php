@@ -1,9 +1,9 @@
 <?php
 
-namespace app\infrastructure\Persistence\Eloquent;
+namespace App\infrastructure\Persistence\Eloquent;
 
-use app\Domain\Entities\product;
-use app\Domain\Entities\ProductRepository;
+use App\Domain\Entities\product;
+use App\Domain\Entities\ProductRepository;
 
 class EloquentProductRepository implements ProductRepository
 {
@@ -47,18 +47,18 @@ class EloquentProductRepository implements ProductRepository
         return new Product($productModel->id, $productModel->product_name, $productModel->product_price, $productModel->image, $productModel->description);
     }
 
-    public function findAll(): array
-    {
-        return ProductModel::all()->map(fn ($productModel) => new Product(
+    // public function findAll(): array
+    // {
+    //     return ProductModel::all()->map(fn ($productModel) => new Product(
 
-            product_id: $productModel->product_id,
-            product_name: $productModel->product_name,
-            product_image: $productModel->product_image,
-            product_price: $productModel->product_price,
-            product_stock: $productModel->product_stock,
-            description: $productModel->description,
+    //         product_id: $productModel->product_id,
+    //         product_name: $productModel->product_name,
+    //         product_image: $productModel->product_image,
+    //         product_price: $productModel->product_price,
+    //         product_stock: $productModel->product_stock,
+    //         description: $productModel->description,
 
-        ))->toArray();
+    //     ))->toArray();
 
-    }
+    // }
 }
