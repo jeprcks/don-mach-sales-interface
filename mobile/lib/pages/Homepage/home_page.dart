@@ -10,32 +10,38 @@ class HomePage extends StatelessWidget {
       {
         'title': 'Grand Opening - Opol Branch',
         'image': 'assets/branchopol.png',
-        'description': 'Join us in celebrating the grand opening of our Opol branch. Enjoy our 3-for-100 promo!',
+        'description':
+            'Join us in celebrating the grand opening of our Opol branch. Enjoy our 3-for-100 promo!',
       },
       {
         'title': 'Outreach Program - Dasmariñas',
         'image': 'assets/branchdasmarinas.png',
-        'description': 'Our Dasmariñas branch conducted an outreach program to give back to the community.',
+        'description':
+            'Our Dasmariñas branch conducted an outreach program to give back to the community.',
       },
       {
         'title': 'Brewing Soon - Buhisan Branch',
         'image': 'assets/branchbuhisan.png',
-        'description': 'Get ready, coffee lovers! Buhisan branch is opening soon!',
+        'description':
+            'Get ready, coffee lovers! Buhisan branch is opening soon!',
       },
       {
         'title': 'Grand Opening - Tabunok Branch',
         'image': 'assets/branchtabunok.png',
-        'description': 'Grand opening celebration with special guest Ariel Alegado. Don’t miss out!',
+        'description':
+            'Grand opening celebration with special guest Ariel Alegado. Don’t miss out!',
       },
       {
         'title': 'On-the-Go Booth',
         'image': 'assets/branchbooth.png',
-        'description': 'Catch us at our on-the-go booths for a quick coffee fix.',
+        'description':
+            'Catch us at our on-the-go booths for a quick coffee fix.',
       },
       {
         'title': 'Now Open - PSU Lingayen',
         'image': 'assets/branchlingayen.png',
-        'description': 'The PSU Lingayen branch is now open! See you, Kape-Pol!',
+        'description':
+            'The PSU Lingayen branch is now open! See you, Kape-Pol!',
       },
     ];
 
@@ -66,7 +72,7 @@ class HomePage extends StatelessWidget {
                   ),
                   SizedBox(height: 16.0),
                   Text(
-                    'Admin',
+                    'User',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20.0,
@@ -147,54 +153,55 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: branches.length,
-                  itemBuilder: (context, index) {
-                    final branch = branches[index];
-                    return Card(
-                      elevation: 5.0,
-                      margin: const EdgeInsets.only(bottom: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(10.0),
-                            ),
-                            child: Image.asset(
-                              height: MediaQuery.of(context).size.width / 1.5,
-                              branch['image']!,
-                              width: double.infinity,
-                              fit: BoxFit.contain, // Ensures the full image is visible
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: branches.length,
+                itemBuilder: (context, index) {
+                  final branch = branches[index];
+                  return Card(
+                    elevation: 5.0,
+                    margin: const EdgeInsets.only(bottom: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(10.0),
+                          ),
+                          child: Image.asset(
+                            height: MediaQuery.of(context).size.width / 1.5,
+                            branch['image']!,
+                            width: double.infinity,
+                            fit: BoxFit
+                                .contain, // Ensures the full image is visible
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            branch['title']!,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              branch['title']!,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            branch['description']!,
+                            style: const TextStyle(fontSize: 14),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(
-                              branch['description']!,
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                          ),
-                          const SizedBox(height: 8.0),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+                        ),
+                        const SizedBox(height: 8.0),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),

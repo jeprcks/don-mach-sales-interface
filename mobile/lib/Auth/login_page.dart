@@ -10,12 +10,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -46,13 +46,12 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 24.0),
                 TextField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
+                  controller: _usernameController,
                   decoration: const InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'Enter your email',
+                    labelText: 'Username',
+                    hintText: 'Enter your username',
                     border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.email),
+                    prefixIcon: Icon(Icons.person),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -87,10 +86,10 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 24.0),
                 ElevatedButton(
                   onPressed: () {
-                    String email = _emailController.text.trim();
+                    String username = _usernameController.text.trim();
                     String password = _passwordController.text.trim();
 
-                    if (email.isEmpty || password.isEmpty) {
+                    if (username.isEmpty || password.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Please fill all fields')),
                       );

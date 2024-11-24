@@ -5,12 +5,10 @@ import 'user_state.dart';
 // User Model
 class User {
   final String username;
-  final String email;
   final String password;
 
   User({
     required this.username,
-    required this.email,
     required this.password,
   });
 }
@@ -25,19 +23,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   // Handler for creating a user
-  Future<void> _onCreateUser(CreateUserEvent event, Emitter<UserState> emit) async {
+  Future<void> _onCreateUser(
+      CreateUserEvent event, Emitter<UserState> emit) async {
     emit(UserCreating());
-
 
     await Future.delayed(const Duration(seconds: 1));
 
     // Check for duplicate usernames (case-insensitive)
-    if (_users.any((user) => user.username.toLowerCase() == event.username.toLowerCase())) {
+    if (_users.any((user) =>
+        user.username.toLowerCase() == event.username.toLowerCase())) {
       emit(const UserError("Username already exists!"));
     } else {
       final newUser = User(
         username: event.username,
-        email: event.email,
         password: event.password,
       );
       _users.add(newUser);
@@ -56,7 +54,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     } else {
       _users[userIndex] = User(
         username: event.username, // Username remains unchanged
-        email: event.newEmail,
         password: event.newPassword,
       );
       emit(UserCreated(List.from(_users))); // Emit updated list
@@ -71,7 +68,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     );
 
     if (_users.length < initialLength) {
-      emit(UserCreated(List.from(_users))); // Emit updated list if deletion occurred
+      emit(UserCreated(
+          List.from(_users))); // Emit updated list if deletion occurred
     } else {
       emit(const UserError("User not found!"));
     }

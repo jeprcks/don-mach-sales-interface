@@ -14,35 +14,29 @@ class CreateUserPage extends StatefulWidget {
 
 class _CreateUserPageState extends State<CreateUserPage> {
   final _usernameController = TextEditingController();
-  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
   void dispose() {
     _usernameController.dispose();
-    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   // Function to show the edit dialog
-  void _showEditDialog(
-      BuildContext context, String username, String currentEmail, String currentPassword) {
-    final emailController = TextEditingController(text: currentEmail);
+  void _showEditDialog(BuildContext context, String username,
+      String currentUsername, String currentPassword) {
     final passwordController = TextEditingController(text: currentPassword);
-
+    final usernameController = TextEditingController(text: currentUsername);
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Edit User'),
-        content: SingleChildScrollView( // To prevent overflow
+        content: SingleChildScrollView(
+          // To prevent overflow
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(
-                controller: emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-              ),
               TextField(
                 controller: passwordController,
                 decoration: const InputDecoration(labelText: 'Password'),
@@ -54,10 +48,10 @@ class _CreateUserPageState extends State<CreateUserPage> {
         actions: [
           ElevatedButton(
             onPressed: () {
-              final newEmail = emailController.text.trim();
               final newPassword = passwordController.text.trim();
+              final newUsername = usernameController.text.trim();
 
-              if (newEmail.isEmpty || newPassword.isEmpty) {
+              if (newUsername.isEmpty || newPassword.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text("Please fill in all fields.")),
                 );
@@ -66,7 +60,6 @@ class _CreateUserPageState extends State<CreateUserPage> {
 
               context.read<UserBloc>().add(EditUserEvent(
                     username: username,
-                    newEmail: newEmail,
                     newPassword: newPassword,
                   ));
 
@@ -114,13 +107,12 @@ class _CreateUserPageState extends State<CreateUserPage> {
 
   @override
   Widget build(BuildContext context) {
-    
     // No need to provide UserBloc here as it's provided in main.dart
     return Scaffold(
-      appBar: AppBar(title: const Text('Create User'),
-      backgroundColor: Colors.brown,
+      appBar: AppBar(
+        title: const Text('Create User'),
+        backgroundColor: Colors.brown,
       ),
-      
       body: BlocListener<UserBloc, UserState>(
         listener: (context, state) {
           if (state is UserCreated) {
@@ -128,7 +120,6 @@ class _CreateUserPageState extends State<CreateUserPage> {
               const SnackBar(content: Text("User created successfully!")),
             );
             _usernameController.clear();
-            _emailController.clear();
             _passwordController.clear();
           } else if (state is UserError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -137,16 +128,13 @@ class _CreateUserPageState extends State<CreateUserPage> {
           }
         },
         child: Padding(
-          
           padding: const EdgeInsets.all(16.0),
-          
           child: LayoutBuilder(builder: (context, constraints) {
-            
             // Define breakpoints for responsive design
-            bool isSmallScreen = constraints.maxWidth < 600; // Example breakpoint
+            bool isSmallScreen =
+                constraints.maxWidth < 600; // Example breakpoint
 
             return Column(
-              
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // User Creation Form
@@ -155,18 +143,14 @@ class _CreateUserPageState extends State<CreateUserPage> {
                   decoration: const InputDecoration(labelText: 'Username'),
                 ),
                 const SizedBox(height: 10),
-                TextField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
-                ),
+
                 const SizedBox(height: 10),
                 TextField(
                   controller: _passwordController,
                   decoration: const InputDecoration(labelText: 'Password'),
                   obscureText: true,
-                  
                 ),
-                
+
                 const SizedBox(height: 20),
                 BlocBuilder<UserBloc, UserState>(
                   builder: (context, state) {
@@ -175,29 +159,29 @@ class _CreateUserPageState extends State<CreateUserPage> {
                           ? null // Disable the button if creating
                           : () {
                               final username = _usernameController.text.trim();
-                              final email = _emailController.text.trim();
                               final password = _passwordController.text.trim();
 
-                              if (username.isEmpty || email.isEmpty || password.isEmpty) {
+                              if (username.isEmpty ||
+                                  username.isEmpty ||
+                                  password.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("Please fill in all fields.")),
+                                  const SnackBar(
+                                      content:
+                                          Text("Please fill in all fields.")),
                                 );
                                 return; // Prevent event from being added
                               }
 
                               context.read<UserBloc>().add(CreateUserEvent(
                                     username: username,
-                                    email: email,
                                     password: password,
                                   ));
                             },
                       child: const Text('Create User'),
                     );
-                    
                   },
-                  
                 ),
-                
+
                 const SizedBox(height: 20),
 
                 // Responsive User List Table
@@ -206,7 +190,8 @@ class _CreateUserPageState extends State<CreateUserPage> {
                     builder: (context, state) {
                       if (state is UserCreated) {
                         if (state.users.isEmpty) {
-                          return const Center(child: Text('No users created yet.'));
+                          return const Center(
+                              child: Text('No users created yet.'));
                         }
 
                         return SingleChildScrollView(
@@ -220,15 +205,6 @@ class _CreateUserPageState extends State<CreateUserPage> {
                                 DataColumn(
                                   label: Text(
                                     'Username',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: isSmallScreen ? 12 : 16,
-                                    ),
-                                  ),
-                                ),
-                                DataColumn(
-                                  label: Text(
-                                    'Email',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: isSmallScreen ? 12 : 16,
@@ -255,40 +231,42 @@ class _CreateUserPageState extends State<CreateUserPage> {
                                   ),
                                 ),
                               ],
-                             
                               columnSpacing: isSmallScreen ? 20 : 40,
                               horizontalMargin: isSmallScreen ? 10 : 20,
                               rows: state.users.map((user) {
                                 return DataRow(cells: [
                                   DataCell(Text(
                                     user.username,
-                                    style: TextStyle(fontSize: isSmallScreen ? 12 : 16),
-                                  )),
-                                  DataCell(Text(
-                                    user.email,
-                                    style: TextStyle(fontSize: isSmallScreen ? 12 : 16),
+                                    style: TextStyle(
+                                        fontSize: isSmallScreen ? 12 : 16),
                                   )),
                                   if (!isSmallScreen)
                                     DataCell(Text(
-                                      '*' * user.password.length, // Masked password for security
-                                      style: TextStyle(fontSize: isSmallScreen ? 12 : 16),
+                                      '*' *
+                                          user.password
+                                              .length, // Masked password for security
+                                      style: TextStyle(
+                                          fontSize: isSmallScreen ? 12 : 16),
                                     )),
                                   DataCell(Row(
                                     children: [
                                       IconButton(
-                                        icon: const Icon(Icons.edit, color: Colors.blue),
+                                        icon: const Icon(Icons.edit,
+                                            color: Colors.blue),
                                         onPressed: () => _showEditDialog(
                                           context,
                                           user.username,
-                                          user.email,
+                                          user.username,
                                           user.password,
                                         ),
                                         tooltip: 'Edit User',
                                       ),
                                       IconButton(
-                                        icon: const Icon(Icons.delete, color: Colors.red),
+                                        icon: const Icon(Icons.delete,
+                                            color: Colors.red),
                                         onPressed: () {
-                                          _showDeleteConfirmation(context, user.username);
+                                          _showDeleteConfirmation(
+                                              context, user.username);
                                         },
                                         tooltip: 'Delete User',
                                       ),
