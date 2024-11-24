@@ -63,12 +63,12 @@ export default function Sidebar(): JSX.Element {
             {!collapsed && <span style={styles.linkText}>Transaction History</span>}
           </Link>
         </li>
-        {/* <li style={styles.listItem}>
-          <Link href="/settings" style={styles.link}>
+        <li style={styles.listItem}>
+          <Link href="/createuser" style={styles.link}>
             <i style={styles.icon} className="fas fa-cog"></i>
-            {!collapsed && <span style={styles.linkText}>Settings</span>}
+            {!collapsed && <span style={styles.linkText}>Create User</span>}
           </Link>
-        </li> */}
+        </li>
         <li style={styles.listItem}>
           <Link href="/login" style={styles.link}>
             <i style={styles.icon} className="fas fa-sign-out-alt"></i>

@@ -4,18 +4,18 @@ namespace App\Domain\Entities;
 
 class User
 {
-    private string $email;
+    private string $username;
     private string $password;
 
-    public function __construct(string $email, string $password)
+    public function __construct(string $username, string $password)
     {
-        $this->email = $email;
+        $this->username = $username;
         $this->password = $password;
     }
 
-    public function getEmail(): string
+    public function getUsername(): string
     {
-        return $this->email;
+        return $this->username;
     }
 
     public function getPassword(): string
