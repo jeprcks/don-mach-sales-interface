@@ -8,6 +8,5 @@ class SalesModel extends Model
 {
     protected $table = 'sales';
 
-    protected $fillable = ['order_list','total_order'];
-
+    protected $fillable = ['order_list', 'total_order', 'quantity'];
 }

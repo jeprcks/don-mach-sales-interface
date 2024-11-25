@@ -1,16 +1,28 @@
 <?php
 
-namespace App\Domain\Entities;
+namespace App\Domain\Users;
 
 class User
 {
+    private int $id;
+
     private string $username;
+
     private string $password;
 
-    public function __construct(string $username, string $password)
-    {
+    public function __construct(
+        ?int $id = null,
+        ?string $username = null,
+        ?string $password = null
+    ) {
+        $this->id = $id;
         $this->username = $username;
         $this->password = $password;
+    }
+
+    public function getID()
+    {
+        return $this->id;
     }
 
     public function getUsername(): string

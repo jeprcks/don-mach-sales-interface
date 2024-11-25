@@ -2,8 +2,7 @@
 
 namespace App\Infrastructure\Persistence\Eloquent;
 
-use App\Domain\Entities\Sales;
-use app\Domain\Entities\SalesRepository;
+use App\Domain\Sales\SalesRepository;
 
 class EloquentSalesRepository implements SalesRepository
 {
@@ -12,6 +11,7 @@ class EloquentSalesRepository implements SalesRepository
         $saleModel = new Sales;
         $saleModel->order_list = $sales['order_list'];
         $saleModel->total_order = $sales['total_order'];
+        $saleModel->quantity = $sales['quantity'];
         $saleModel->save();
     }
 

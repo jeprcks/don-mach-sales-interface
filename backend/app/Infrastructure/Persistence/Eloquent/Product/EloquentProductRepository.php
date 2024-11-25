@@ -1,64 +1,38 @@
 <?php
 
-namespace App\infrastructure\Persistence\Eloquent;
+namespace App\Infrastructure\Persistence\Eloquent\Product;
 
-use App\Domain\Entities\product;
-use App\Domain\Entities\ProductRepository;
+use App\Domain\Products\ProductRepository;
 
 class EloquentProductRepository implements ProductRepository
 {
-    public function create(Product $product): void
+    public function findAll()
     {
-        $productModel = ProductModel::find($product->getProduct_id()) ?? new ProductModel;
-        $productModel->product_id = $product->getProduct_id();
-        $productModel->product_name = $product->getProduct_name();
-        $productModel->product_image = $product->getProduct_image();
-        $productModel->product_price = $product->getProduct_price();
-        $productModel->description = $product->getDescription();
-        $productModel->product_stock = $product->getProduct_stock();
-        $productModel->save();
+        return ProductModel::all();
     }
 
-    public function update(Product $product): void
+    public function findById($id)
     {
-        $productModel = ProductModel::find($product->getProduct_id()) ?? new ProductModel;
-        $productModel->id = $product->getProduct_id();
-        $productModel->product_name = $product->getProduct_name();
-        $productModel->product_image = $product->getProduct_image();
-        $productModel->product_price = $product->getProduct_price();
-        $productModel->product_stock = $product->getProduct_stock();
-        $productModel->description = $product->getDescriptipn();
-        $productModel->save();
-
+        return ProductModel::findOrFail($id);
     }
 
-    public function delete(Product $product): void
+    public function create(array $data)
     {
-        ProductModel::where('id', $id)->delete();
+        return ProductModel::create($data);
     }
 
-    public function findByID(string $id): ?Product
+    public function update($id, array $data)
     {
-        $productModel = ProductModel::find($id);
-        if (! productModel) {
-            return null;
-        }
+        $product = $this->findById($id);
+        $product->update($data);
 
-        return new Product($productModel->id, $productModel->product_name, $productModel->product_price, $productModel->image, $productModel->description);
+        return $product;
     }
 
-    // public function findAll(): array
-    // {
-    //     return ProductModel::all()->map(fn ($productModel) => new Product(
+    public function delete($id)
+    {
+        $product = $this->findById($id);
 
-    //         product_id: $productModel->product_id,
-    //         product_name: $productModel->product_name,
-    //         product_image: $productModel->product_image,
-    //         product_price: $productModel->product_price,
-    //         product_stock: $productModel->product_stock,
-    //         description: $productModel->description,
-
-    //     ))->toArray();
-
-    // }
+        return $product->delete();
+    }
 }

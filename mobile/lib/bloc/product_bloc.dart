@@ -4,7 +4,6 @@ import 'product_event.dart';
 import 'product_state.dart';
 import 'package:flutterproject2/models/productmodel.dart';
 
-
 //Productpage
 //Stockpage
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
@@ -138,7 +137,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 }
 
-
 //sales_page
 final List<Map<String, dynamic>> products = [
     {'name': 'Brown Spanish Latte', 'price': 39.00, 'quantity': 0},
@@ -151,35 +149,3 @@ final List<Map<String, dynamic>> products = [
   ];
   double total = 0.0;
 
-  // settings_bloc.dart
-  
-class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  SettingsBloc() : super(SettingsInitial());
-
-  @override
-  // ignore: override_on_non_overriding_member
-  Stream<SettingsState> mapEventToState(SettingsEvent event) async* {
-    if (event is UpdateProfilePicture) {
-      yield SettingsLoading();
-      try {
-        // Simulate uploading the profile picture
-        await Future.delayed(const Duration(seconds: 2));
-        yield SettingsSuccess("Profile picture updated successfully!");
-      } catch (e) {
-        yield SettingsFailure("Failed to update profile picture.");
-      }
-    } else if (event is UpdatePassword) {
-      yield SettingsLoading();
-      try {
-        if (event.newPassword.isEmpty) {
-          throw Exception("Password cannot be empty");
-        }
-        // Simulate updating the password
-        await Future.delayed(const Duration(seconds: 2));
-        yield SettingsSuccess("Password updated successfully!");
-      } catch (e) {
-        yield SettingsFailure(e.toString());
-      }
-    }
-  }
-}

@@ -5,13 +5,11 @@ import { useRouter } from 'next/navigation'; // Updated import for App Router
 
 interface User {
     username: string;
-    email: string;
     password: string;
 }
 
 interface FormData {
     username: string;
-    email: string;
     password: string;
 }
 
@@ -25,7 +23,6 @@ export default function CreateUser() {
     const [users, setUsers] = useState<User[]>([]);
     const [formData, setFormData] = useState<FormData>({
         username: '',
-        email: '',
         password: '',
     });
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -37,7 +34,7 @@ export default function CreateUser() {
     };
 
     const handleCreateUser = () => {
-        if (!formData.username || !formData.email || !formData.password) {
+        if (!formData.username || !formData.password) {
             alert('Please fill in all fields');
             return;
         }
@@ -54,7 +51,7 @@ export default function CreateUser() {
             setUsers([...users, formData]);
         }
 
-        setFormData({ username: '', email: '', password: '' });
+        setFormData({ username: '', password: '' });
     };
 
     const handleEditUser = (index: number) => {
@@ -90,14 +87,6 @@ export default function CreateUser() {
                         style={styles.input}
                     />
                     <input
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        style={styles.input}
-                    />
-                    <input
                         type="password"
                         name="password"
                         placeholder="Password"
@@ -114,7 +103,6 @@ export default function CreateUser() {
                         <thead>
                             <tr>
                                 <th style={styles.th}>Username</th>
-                                <th style={styles.th}>Email</th>
                                 <th style={styles.th}>Password</th>
                                 <th style={styles.th}>Actions</th>
                             </tr>
@@ -123,7 +111,6 @@ export default function CreateUser() {
                             {users.map((user, index) => (
                                 <tr key={index} style={styles.tr}>
                                     <td style={styles.td}>{user.username}</td>
-                                    <td style={styles.td}>{user.email}</td>
                                     <td style={styles.td}>******</td>
                                     <td style={styles.td}>
                                         <button

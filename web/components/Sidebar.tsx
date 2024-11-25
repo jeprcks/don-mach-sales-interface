@@ -34,7 +34,7 @@ export default function Sidebar(): JSX.Element {
           alt="Admin Avatar"
           style={styles.avatar}
         />
-        {!collapsed && <h3 style={styles.avatarName}>Admin</h3>}
+        {!collapsed && <h3 style={styles.avatarName}>User</h3>}
       </div>
 
       {/* Menu Section */}
@@ -46,7 +46,7 @@ export default function Sidebar(): JSX.Element {
           </Link>
         </li> */}
         <li style={styles.listItem}>
-          <Link href="/products" style={styles.link}>
+          <Link href="/product" style={styles.link}>
             <i style={styles.icon} className="fas fa-box"></i>
             {!collapsed && <span style={styles.linkText}>Products</span>}
           </Link>

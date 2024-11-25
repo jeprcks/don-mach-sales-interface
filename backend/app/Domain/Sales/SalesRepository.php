@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Domain\Entities\SalesRepository;
-
-use app\Domain\Entities\Sales;
+namespace App\Domain\Sales\SalesRepository;
 
 interface SalesRepository
 {
