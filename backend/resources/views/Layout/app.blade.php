@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
-    <title>DP&J | @yield('title')</title>
+    <title>Don Macchiatos | @yield('title')</title>
 </head>
 
 <body>
