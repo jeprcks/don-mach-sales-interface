@@ -39,6 +39,19 @@ class Product
         $this->product_stock = $product_stock;
     }
 
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'product_id' => $this->product_id,
+            'product_image' => $this->product_image,
+            'product_name' => $this->product_name,
+            'product_price' => $this->product_price,
+            'description' => $this->description,
+            'product_stock' => $this->product_stock,
+        ];
+    }
+
     public function getProduct_id()
     {
         return $this->product_id;

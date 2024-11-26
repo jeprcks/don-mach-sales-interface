@@ -2,8 +2,17 @@
 
 namespace App\Application\Product;
 
+use App\Domain\Product\ProductRepository;
+
 class RegisterProducts
 {
+    private ProductRepository $productRepository;
+
+    public function __construct(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
     public function execute($data)
     {
         // Temporary implementation for testing
@@ -13,13 +22,13 @@ class RegisterProducts
     public function findById($id)
     {
         // Temporary implementation for testing
-        return (object)[
+        return (object) [
             'id' => $id,
             'name' => 'Test Product',
             'description' => 'Test Description',
             'price' => 100,
             'stock' => 10,
-            'category' => 'Test Category'
+            'category' => 'Test Category',
         ];
     }
 
@@ -33,5 +42,10 @@ class RegisterProducts
     {
         // Temporary implementation for testing
         return true;
+    }
+
+    public function findAll(): array
+    {
+        return $this->productRepository->findAll();
     }
 }

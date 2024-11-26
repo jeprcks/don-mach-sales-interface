@@ -33,6 +33,7 @@ export default function Sales(): JSX.Element {
     const { addTransaction, transactions = [] } = useTransactions();
 
     const [transaction, setTransaction] = useState<Transaction | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState();
     const [showModal, setShowModal] = useState<boolean>(false);
     const [orderNumber, setOrderNumber] = useState<number>(1);
 
@@ -87,9 +88,11 @@ export default function Sales(): JSX.Element {
 
     const closeModal = (): void => {
         setShowModal(false);
-        setProducts((prev) =>
-            prev.map((product) => ({ ...product, quantity: 0 }))
-        );
+        console.log(products);
+        
+        // setProducts((prev) =>
+        //     prev.map((product) => ({ ...product, quantity: 0 }))
+        // );
     };
 
     return (

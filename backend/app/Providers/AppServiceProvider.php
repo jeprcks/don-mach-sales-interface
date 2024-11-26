@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Domain\Product\ProductRepository;
+// Eloquent.
+use App\Infrastructure\Persistence\Eloquent\Product\EloquentProductRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(ProductRepository::class, EloquentProductRepository::class);
     }
 
     /**
