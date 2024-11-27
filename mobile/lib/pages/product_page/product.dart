@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterproject2/models/productmodel.dart';
 import '../../bloc/product_bloc.dart';
@@ -87,7 +86,8 @@ class _ProductPageState extends State<ProductPage> {
                       const SizedBox(height: 4.0),
                       Text(
                         '₱${product.price.toStringAsFixed(2)}',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4.0),
                       Text(
