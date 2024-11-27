@@ -7,7 +7,7 @@ namespace App\Domain\Product;
  * **/
 class Product
 {
-    private int $id;
+    private ?int $id;
 
     private ?string $product_id;
 
@@ -50,6 +50,11 @@ class Product
             'description' => $this->description,
             'product_stock' => $this->product_stock,
         ];
+    }
+
+    public function getID(): ?int
+    {
+        return $this->id;
     }
 
     public function getProduct_id()

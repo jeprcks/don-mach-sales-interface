@@ -6,7 +6,15 @@ interface ProductRepository
 {
     public function findAll(): array;
 
-    // public function findById(int $id): ?Product;
+    public function create(Product $product): void;
+
+    public function update(Product $product): void;
+
+    public function delete(string $product_id): ?Product;
+
+    public function findById(int $id): ?Product;
+
+    public function findByProductID(string $product_id): ?Product;
 
     // public function create(array $data): void;
 
