@@ -86,8 +86,7 @@ class _ProductPageState extends State<ProductPage> {
                       const SizedBox(height: 4.0),
                       Text(
                         '₱${product.price.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4.0),
                       Text(

@@ -12,6 +12,7 @@ import 'package:flutterproject2/pages/SalesPage/sales_page.dart';
 
 void main() {
   runApp(const MyApp());
+  
 }
 
 class MyApp extends StatelessWidget {
@@ -26,8 +27,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/splashscreen': (context) => const SplashScreen(),
           '/login': (context) => const LoginPage(),
-          '/products': (context) =>
-              const ProductPage(), // Ensure to use ProductPage if that's intended
+          '/products': (context) => const ProductPage(), // Ensure to use ProductPage if that's intended
           // '/createuserpage': (context) => const CreateUserPage(),
           '/salespage': (context) => const SalesPage(),
           '/homepage': (context) => const HomePage(),
