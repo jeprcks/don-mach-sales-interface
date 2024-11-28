@@ -95,12 +95,12 @@ class EloquentProductRepository implements ProductRepository
         );
     }
 
-    public function delete(string $product_id): ?Product
+    public function delete(string $product_id): void
     {
-        $productModel = ProductModel::where('product_id', $product_id)->delete();
+        ProductModel::where('id', $product_id)->delete();
 
-        return true;
     }
+
     // public function create(array $data)
     // {
     //     return ProductModel::create($data);

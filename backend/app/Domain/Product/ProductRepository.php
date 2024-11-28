@@ -10,7 +10,7 @@ interface ProductRepository
 
     public function update(Product $product): void;
 
-    public function delete(string $product_id): ?Product;
+    public function delete(string $id): void;
 
     public function findById(int $id): ?Product;
 
