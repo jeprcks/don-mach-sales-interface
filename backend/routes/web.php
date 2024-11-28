@@ -24,6 +24,8 @@ Route::get('/users', [UserWEBController::class, 'index']);
 Route::get('/transaction', [TransactionWEBController::class, 'index']);
 Route::get('/sales', [SalesWEBController::class, 'index']);
 Route::post('/deleteitem/{id}', [ProductWebController::class, 'deleteitem'])->name('deleteitem');
+Route::delete('/delete/products/{id}', [ProductWebController::class, 'deleteitem'])->name('product.delete');
+
 
 //get kuha data or views
 //post kay create

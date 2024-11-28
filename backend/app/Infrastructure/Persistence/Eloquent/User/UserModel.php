@@ -10,14 +10,12 @@ class UserModel extends Model
 
     protected $fillable = [
         'username',
-        'password'
+        'password',
+        'api_token'
     ];
 
     protected $hidden = [
         'password',
+        'api_token'
     ];
-
-    // If you don't want to use timestamps (created_at, updated_at)
-    // uncomment the following line
-    // public $timestamps = false;
 }
