@@ -35,7 +35,13 @@
                                 {{ $product['product_name'] }}</h2>
                             <p style="color: #6b4226; font-weight: bold; margin-bottom: 8px;">
                                 ₱{{ $product['product_price'] }}</p>
-                            <p style="color: #666; margin-bottom: 8px;">Stock: {{ $product['product_stock'] }}</p>
+                            <p
+                                style="color: {{ $product['product_stock'] < 50 ? '#dc3545' : '#666' }}; margin-bottom: 8px;">
+                                Stock: {{ $product['product_stock'] }}
+                                @if ($product['product_stock'] < 50)
+                                    <span style="font-weight: bold; color: #dc3545;"> (Low Stock)</span>
+                                @endif
+                            </p>
                             <p style="color: #666; margin-bottom: 15px;">{{ $product['description'] }}</p>
 
                             <div style="margin-top: auto;">

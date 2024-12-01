@@ -10,6 +10,7 @@ class TransactionWEBController extends Controller
     public function index()
     {
         $transactions = SalesModel::orderBy('created_at', 'desc')->get();
+
         return view('Pages.Transaction.index', compact('transactions'));
     }
 }
