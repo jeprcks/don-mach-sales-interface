@@ -3,162 +3,6 @@
 @include('Components.NaBar.navbar')
 
 @section('content')
-
-    <style>
-        .product-card {
-            border: 1px solid #d4b8a5;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            background-color: #fff8e7;
-            box-shadow: 0 4px 8px rgba(75, 48, 37, 0.1);
-            margin-bottom: 20px;
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(75, 48, 37, 0.15);
-        }
-
-        .product-card h5 {
-            color: #4b3025;
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .product-card p {
-            color: #6b4226;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-
-        .product-description {
-            color: #9e602b !important;
-            font-size: 0.9rem !important;
-            height: 40px;
-            overflow: hidden;
-            margin-bottom: 15px !important;
-        }
-
-        .product-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .cart-summary p {
-            font-size: 18px;
-        }
-
-        .cart-summary .total-price {
-            font-weight: bold;
-            font-size: 20px;
-        }
-
-        .quantity-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .quantity-controls button {
-            font-size: 18px;
-            padding: 5px 10px;
-        }
-
-        .quantity-controls input {
-            text-align: center;
-            width: 50px;
-            font-size: 16px;
-        }
-
-        .remove-btn {
-            display: inline-block;
-            padding: 5px 15px;
-            margin-left: 10px;
-            color: white;
-            background-color: red;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .remove-btn:hover {
-            background-color: darkred;
-        }
-
-        /* Modal styles */
-        .modal-content {
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .modal-header {
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
-        }
-
-        .modal-body {
-            padding: 20px 0;
-        }
-
-        .modal-footer {
-            padding-top: 10px;
-            border-top: 2px solid #ddd;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        /* Additional Styling for Transaction Modal */
-        .transaction-summary h5 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .transaction-summary ul {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 20px;
-            font-size: 16px;
-            color: #666;
-        }
-
-        .transaction-summary li {
-            padding: 5px 0;
-        }
-
-        .transaction-summary .total {
-            font-weight: bold;
-            font-size: 20px;
-            color: #333;
-        }
-    </style>
-
     <div class="container my-5">
         <div class="row mb-4">
             <div class="col-12 text-center">
@@ -396,5 +240,176 @@
         // Initial update of the cart
         updateCart();
     </script>
+
+
+    <style>
+        body {
+            background-color: #fff8e7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            flex: 1;
+            background-color: #fff8e7;
+            padding: 20px;
+            border-radius: 12px;
+            width: 100%;
+        }
+
+        .product-card {
+            border: 1px solid #d4b8a5;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(75, 48, 37, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(75, 48, 37, 0.15);
+        }
+
+        .product-card h5 {
+            color: #4b3025;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .product-card p {
+            color: #6b4226;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .product-description {
+            color: #9e602b !important;
+            font-size: 0.9rem !important;
+            height: 40px;
+            overflow: hidden;
+            margin-bottom: 15px !important;
+        }
+
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .cart-summary p {
+            font-size: 18px;
+        }
+
+        .cart-summary .total-price {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-controls button {
+            font-size: 18px;
+            padding: 5px 10px;
+        }
+
+        .quantity-controls input {
+            text-align: center;
+            width: 50px;
+            font-size: 16px;
+        }
+
+        .remove-btn {
+            display: inline-block;
+            padding: 5px 15px;
+            margin-left: 10px;
+            color: white;
+            background-color: red;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .remove-btn:hover {
+            background-color: darkred;
+        }
+
+        /* Modal styles */
+        .modal-content {
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .modal-body {
+            padding: 20px 0;
+        }
+
+        .modal-footer {
+            padding-top: 10px;
+            border-top: 2px solid #ddd;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        /* Additional Styling for Transaction Modal */
+        .transaction-summary h5 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .transaction-summary ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .transaction-summary li {
+            padding: 5px 0;
+        }
+
+        .transaction-summary .total {
+            font-weight: bold;
+            font-size: 20px;
+            color: #333;
+        }
+    </style>
 
 @endsection

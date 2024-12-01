@@ -2,73 +2,32 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useProducts } from '../Hooks/useProducts/useProducts';
 
 interface Product {
-    id: number;
-    name: string;
+    product_id: string;
+    product_name: string;
     description: string;
-    price: number;
-    stock: number;
-    image: string;
+    product_price: number;
+    product_stock: number;
+    product_image: string;
 }
 
 export default function CoffeeList() {
     const router = useRouter();
-
-    const [products, setProducts] = useState<Product[]>([
-        {
-            id: 1,
-            name: 'Brown Spanish',
-            description: 'Brown Spanish Latte is basically espresso-based coffee with milk.',
-            price: 39,
-            stock: 100,
-            image: '/images/Productlist/donmacnew.jpg',
-        },
-        {
-            id: 2,
-            name: 'Oreo Coffee',
-            description: 'Oreo Iced Coffee Recipe is perfect for a hot summer day.',
-            price: 39,
-            stock: 50,
-            image: '/images/Productlist/donmacnew.jpg',
-        },
-        {
-            id: 3,
-            name: 'Black Forest',
-            description: 'A decadent symphony of flavors featuring luxurious Belgian dark chocolate and succulent Taiwanese strawberries, delicately infused with velvety milk',
-            price: 39,
-            stock: 50,
-            image: '/images/Productlist/blackforest.jpg',
-        },
-        {
-            id: 4,
-            name: 'Don darko',
-            description: 'Crafted from the finest Belgian dark chocolate, harmoniously blended with creamy milk',
-            price: 39,
-            stock: 50,
-            image: '/images/Productlist/dondarko.jpg',
-        },
-        {
-            id: 5,
-            name: 'Donya Berry',
-            description: 'A tantalizing fusion of succulent Taiwanese strawberries mingled with creamy milk',
-            price: 39,
-            stock: 50,
-            image: '/images/Productlist/donyaberry.jpg',
-        },
-        {
-            id: 6,
-            name: 'Iced Caramel',
-            description: 'An exquisite blend of freshly pulled espresso, smooth milk, and luscious caramel syrup, served over a bed of ice',
-            price: 39,
-            stock: 50,
-            image: '/images/Productlist/icedcaramel.jpg',
-        }
-    ]);
+    const { products, loading, error } = useProducts();
 
     const handleBackClick = () => {
         router.push('/homepage');
     };
+
+    if (loading) {
+        return <div style={styles.loading}>Loading...</div>;
+    }
+
+    if (error) {
+        return <div style={styles.error}>Error: {error}</div>;
+    }
 
     return (
         <div style={styles.container}>
@@ -78,19 +37,19 @@ export default function CoffeeList() {
             <h1 style={{ ...styles.header, textAlign: 'center' as const }}>Coffee Menu</h1>
             <div style={{ ...styles.productGrid, display: 'grid' as const, gridTemplateColumns: 'repeat(2, 1fr)' as const, gap: '20px' as const }}>
                 {products.map((product) => (
-                    <div key={product.id} style={{ ...styles.productCard, display: 'flex' as const, flexDirection: 'column' as const, alignItems: 'center' as const }}>
+                    <div key={product.product_id} style={{ ...styles.productCard, display: 'flex' as const, flexDirection: 'column' as const, alignItems: 'center' as const }}>
                         <div style={styles.imageWrapper}>
                             <img
-                                src={product.image}
-                                alt={product.name}
+                                src={`http://localhost:8000/images/${product.product_image}`}
+                                alt={product.product_name}
                                 style={{ ...styles.productImage, objectFit: 'cover' as const }}
                             />
                         </div>
                         <div style={{ ...styles.cardContent, textAlign: 'center' as const }}>
-                            <h2 style={styles.productName}>{product.name}</h2>
+                            <h2 style={styles.productName}>{product.product_name}</h2>
                             <p style={styles.productDescription}>{product.description}</p>
-                            <p style={styles.productPrice}>Price: ₱{product.price}</p>
-                            <p style={styles.productStock}>Stock: {product.stock}</p>
+                            <p style={styles.productPrice}>Price: ₱{product.product_price}</p>
+                            <p style={styles.productStock}>Stock: {product.product_stock}</p>
                         </div>
                     </div>
                 ))}
@@ -177,5 +136,21 @@ const styles = {
     productStock: {
         fontSize: '1rem',
         color: '#4b4225',
+    },
+    loading: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '1.5rem',
+        color: '#6b4226',
+    },
+    error: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '1.5rem',
+        color: '#dc3545',
     },
 };

@@ -29,7 +29,7 @@
                                             <span class="badge bg-success ms-2">Completed</span>
                                         </h5>
                                         <p class="text-muted mb-0">
-                                            {{ $transaction->created_at->format('M d, Y h:i A') }}
+                                            {{ $transaction->created_at->setTimezone('Asia/Manila')->format('M d, Y h:i A') }}
                                         </p>
                                     </div>
                                     <h5 class="text-success mb-0">₱{{ number_format($transaction->total_order, 2) }}</h5>
