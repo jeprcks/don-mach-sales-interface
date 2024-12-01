@@ -6,40 +6,49 @@
 
     <style>
         .product-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
+            border: 1px solid #d4b8a5;
+            border-radius: 12px;
+            padding: 20px;
             text-align: center;
-            background-color: #f9f9f9;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff8e7;
+            box-shadow: 0 4px 8px rgba(75, 48, 37, 0.1);
             margin-bottom: 20px;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(75, 48, 37, 0.15);
+        }
+
+        .product-card h5 {
+            color: #4b3025;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .product-card p {
+            color: #6b4226;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .product-description {
+            color: #9e602b !important;
+            font-size: 0.9rem !important;
+            height: 40px;
+            overflow: hidden;
+            margin-bottom: 15px !important;
         }
 
         .product-list {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        .product-list .product-card {
-            width: 220px;
-        }
-
-        .cart-table th,
-        .cart-table td {
-            text-align: center;
-        }
-
-        .checkout-btn {
-            width: 100%;
-        }
-
-        .cart-summary {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .cart-summary p {
@@ -154,36 +163,24 @@
         <div class="row mb-4">
             <div class="col-12 text-center">
                 <h2>Sales Interface</h2>
-                <p>Browse and add items to your cart.</p>
-                <div id="order-info" class="text-center mb-4">
-                    <h4>Order #: <span id="order-number">001</span></h4>
-                    <p id="order-date"></p>
-                </div>
             </div>
         </div>
 
         <div class="product-list">
-            <!-- Product Cards -->
-            <div class="product-card">
-                <h5>Product 1</h5>
-                <p>$10.00</p>
-                <button class="btn btn-primary add-to-cart" data-product="Product 1" data-price="10.00">Add to Cart</button>
-            </div>
-            <div class="product-card">
-                <h5>Product 2</h5>
-                <p>$15.00</p>
-                <button class="btn btn-primary add-to-cart" data-product="Product 2" data-price="15.00">Add to Cart</button>
-            </div>
-            <div class="product-card">
-                <h5>Product 3</h5>
-                <p>$20.00</p>
-                <button class="btn btn-primary add-to-cart" data-product="Product 3" data-price="20.00">Add to Cart</button>
-            </div>
-            <div class="product-card">
-                <h5>Product 4</h5>
-                <p>$25.00</p>
-                <button class="btn btn-primary add-to-cart" data-product="Product 4" data-price="25.00">Add to Cart</button>
-            </div>
+            @foreach ($products as $product)
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="{{ asset('images/' . ($product->product_image ?? 'default.jpg')) }}"
+                            alt="{{ $product->product_name }}" style="max-width: 200px; height: auto;">
+                    </div>
+                    <h5>{{ $product->product_name }}</h5>
+                    <p>₱{{ number_format($product->product_price, 2) }}</p>
+                    <button class="btn btn-primary add-to-cart" data-product="{{ $product->product_name }}"
+                        data-price="{{ $product->product_price }}" data-stock="{{ $product->product_stock }}">
+                        Add to Cart
+                    </button>
+                </div>
+            @endforeach
         </div>
 
         <div class="row">
@@ -273,10 +270,23 @@
 
         // Add item to the cart
         function addToCart(productName, productPrice) {
+            const productCard = document.querySelector(`[data-product="${productName}"]`);
+            const stockLimit = parseInt(productCard.getAttribute('data-stock'));
+
+            if (stockLimit <= 0) {
+                alert('This product is out of stock!');
+                return;
+            }
+
             const existingProduct = cart.find(item => item.name === productName);
             if (existingProduct) {
-                existingProduct.quantity++;
-                existingProduct.totalPrice = existingProduct.quantity * existingProduct.price;
+                if (existingProduct.quantity < stockLimit) {
+                    existingProduct.quantity++;
+                    existingProduct.totalPrice = existingProduct.quantity * existingProduct.price;
+                } else {
+                    alert('Stock limit reached for this product!');
+                    return;
+                }
             } else {
                 cart.push({
                     name: productName,
@@ -309,33 +319,62 @@
 
         // Show the checkout modal
         function showCheckoutModal() {
-            let modal = document.getElementById('checkoutModal');
-            let transactionDetails = document.getElementById('transaction-details');
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
 
-            // Set order number and date
-            document.getElementById('order-number').textContent = orderNumber.toString().padStart(3, '0');
-            document.getElementById('order-date').textContent = getCurrentDate();
+            // First update the stock and create transaction
+            fetch('{{ route('sales.updateStock') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        orders: cart.map(item => ({
+                            name: item.name,
+                            price: item.price,
+                            quantity: item.quantity,
+                            totalPrice: item.totalPrice
+                        }))
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        let modal = document.getElementById('checkoutModal');
+                        let transactionDetails = document.getElementById('transaction-details');
 
-            // Generate transaction details
-            let transactionContent = `<h5>Order #${orderNumber}</h5><p>${getCurrentDate()}</p><ul>`;
-            cart.forEach(item => {
-                transactionContent +=
-                    `<li>${item.name} - ${item.quantity} x $${item.price} = $${item.totalPrice.toFixed(2)}</li>`;
-            });
-            transactionContent +=
-                `</ul><p><strong>Total: $${cart.reduce((sum, item) => sum + item.totalPrice, 0).toFixed(2)}</strong></p>`;
+                        let transactionContent = `
+                        <h5>Order #${data.transaction_id}</h5>
+                        <p>${getCurrentDate()}</p>
+                        <ul>`;
 
-            transactionDetails.innerHTML = transactionContent;
+                        cart.forEach(item => {
+                            transactionContent +=
+                            `
+                            <li>${item.name} - ${item.quantity} x ₱${item.price} = ₱${item.totalPrice.toFixed(2)}</li>`;
+                        });
 
-            // Show modal
-            modal.classList.add('active');
+                        transactionContent +=
+                            `</ul>
+                        <p><strong>Total: ₱${cart.reduce((sum, item) => sum + item.totalPrice, 0).toFixed(2)}</strong></p>`;
 
-            // Clear cart after checkout
-            cart = [];
-            updateCart();
+                        transactionDetails.innerHTML = transactionContent;
+                        modal.classList.add('active');
 
-            // Increment order number
-            orderNumber++;
+                        // Clear cart after successful checkout
+                        cart = [];
+                        updateCart();
+                    } else {
+                        alert(data.message || 'Failed to process order. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing your order. Please try again.');
+                });
         }
 
         // Close the checkout modal

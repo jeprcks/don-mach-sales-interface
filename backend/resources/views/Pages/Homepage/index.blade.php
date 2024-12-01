@@ -11,78 +11,79 @@
                 Don Macchiatos</h1>
             <h2 style="font-size: 2rem; color: #4b3025; margin-bottom: 20px; font-weight: bold;">Branch Highlights</h2>
             <div
-                style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; width: 100%; max-width: 1500px; justify-content: center;">
+                style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; width: 95%; max-width: 1600px; justify-content: center; margin: 40px auto;">
                 <!-- Branch 1 -->
                 <div
-                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 150px; text-align: center;">
-                    <!-- Adjusted padding for a slightly bigger box -->
-                    <Image src="/images/branchopol.png" alt="Opol Branch" layout="responsive" width={500} height={300}
-                        style="border-radius: 12px;" />
-                    <p style="margin-top: 10px; font-size: 1rem; color: #4b3025; font-weight: bold;">
-                        <strong>Grand Opening - Opol Branch</strong>
-                        <br />
-                        Join us in celebrating the grand opening of our Opol branch.
-                        Enjoy our 3-for-100 promo!
+                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
+                    <div style="width: 100%; height: 600px; margin-bottom: 20px; position: relative;">
+                        <img src="/images/Calambabranch.jpg" alt="Opol Branch"
+                            style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" />
+                    </div>
+                    <h3 style="font-size: 1.6rem; color: #4b3025; margin-bottom: 15px;">Grand Opening - Calamba Branch</h3>
+                    <p style="font-size: 1.3rem; color: #4b3025; line-height: 1.5;">
+                        Don Macchiatos Calamba Branch will be reopening its doors and is ready to serve you the best &
+                        awarding winning Iced Caramel Macchiato along with five other favorites. And ofcourse, don’t miss
+                        the latest flavor addition, our hot drinks series.
                     </p>
                 </div>
 
                 <!-- Branch 2 -->
                 <div
-                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 150px; text-align: center;">
-                    <!-- Adjusted padding for a slightly bigger box -->
-                    <Image src="/images/branchdasmarinas.png" alt="Dasmarinas Branch" layout="responsive" width={500}
-                        height={300} style="border-radius: 12px;" />
-                    <p style="margin-top: 10px; font-size: 1rem; color: #4b3025; font-weight: bold;">
-                        <strong>Dasmarinas Branch</strong>
-                        <br />
+                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
+                    <div style="width: 100%; height: 600px; margin-bottom: 20px; position: relative;">
+                        <img src="/images/branchdasmarinas.png" alt="Dasmarinas Branch"
+                            style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" />
+                    </div>
+                    <h3 style="font-size: 1.6rem; color: #4b3025; margin-bottom: 15px;">Dasmarinas Branch</h3>
+                    <p style="font-size: 1.3rem; color: #4b3025; line-height: 1.5;">
                         Our Dasmariñas branch conducted an outreach program to give back to the community.
                     </p>
 
                 </div>
                 <!-- Branch 3 -->
                 <div
-                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 150px; text-align: center;">
-                    <!-- Adjusted padding for a slightly bigger box -->
-                    <Image src="/images/branchlingayen.png" alt="Lingayen Branch" layout="responsive" width={500}
-                        height={300} style="border-radius: 12px;" />
-                    <p style="margin-top: 10px; font-size: 1rem; color: #4b3025; font-weight: bold;">
-                        <strong>Lingayen Branch</strong>
-                        <br />
+                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
+                    <div style="width: 100%; height: 600px; margin-bottom: 20px; position: relative;">
+                        <img src="/images/branchlingayen.png" alt="Lingayen Branch"
+                            style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" />
+                    </div>
+                    <h3 style="font-size: 1.6rem; color: #4b3025; margin-bottom: 15px;">Lingayen Branch</h3>
+                    <p style="font-size: 1.3rem; color: #4b3025; line-height: 1.5;">
                         Get ready, coffee lovers! Buhisan branch is opening soon!!
                     </p>
                 </div>
 
                 <!-- Branch 4 -->
                 <div
-                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 150px; text-align: center;">
-                    <!-- Adjusted padding for a slightly bigger box -->
-                    <Image src="/images/branchopol.png" alt="Pol Branch" layout="responsive" width={500} height={300}
-                        style="border-radius: 12px;" />
-                    <p style="margin-top: 10px; font-size: 1rem; color: #4b3025; font-weight: bold;">
-                        <strong>Opol Branch</strong>
-                        <br />
+                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
+                    <div style="width: 100%; height: 600px; margin-bottom: 20px; position: relative;">
+                        <img src="/images/branchopol.jpg" alt="Pol Branch"
+                            style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" />
+                    </div>
+                    <h3 style="font-size: 1.6rem; color: #4b3025; margin-bottom: 15px;">Opol Branch</h3>
+                    <p style="font-size: 1.3rem; color: #4b3025; line-height: 1.5;">
                         'Join us in celebrating the grand opening of our Opol branch. Enjoy our 3-for-100 promo!
                     </p>
                 </div>
                 <div
-                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 150px; text-align: center;">
-                    <!-- Adjusted padding for a slightly bigger box -->
-                    <Image src="/images/branchtabunok.png" alt="Pol Branch" layout="responsive" width={500} height={300}
-                        style="border-radius: 12px;" />
-                    <p style="margin-top: 10px; font-size: 1rem; color: #4b3025; font-weight: bold;">
-                        <strong>Tabunok</strong>
-                        <br />
+                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
+                    <div style="width: 100%; height: 600px; margin-bottom: 20px; position: relative;">
+                        <img src="/images/branchtabunok.png" alt="Pol Branch"
+                            style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" />
+                    </div>
+                    <h3 style="font-size: 1.6rem; color: #4b3025; margin-bottom: 15px;">Tabunok</h3>
+                    <p style="font-size: 1.3rem; color: #4b3025; line-height: 1.5;">
                         Grand opening celebration with special guest Ariel Alegado. Don't miss out!
                     </p>
                 </div>
                 <div
-                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 150px; text-align: center;">
-                    <!-- Adjusted padding for a slightly bigger box -->
-                    <Image src="/images/branchbuhisan.png" alt="Pol Branch" layout="responsive" width={500} height={300}
-                        style="border-radius: 12px;" />
-                    <p style="margin-top: 10px; font-size: 1rem; color: #4b3025; font-weight: bold;">
-                        <strong>Buhisan Branch</strong>
-                        <br />
+                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
+                    <div style="width: 100%; height: 600px; margin-bottom: 20px; position: relative;">
+                        <img src="/images/branchbuhisan.png" alt="Pol Branch"
+                            style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" />
+                    </div>
+                    <h3 style="font-size: 1.6rem; color: #4b3025; margin-bottom: 15px;">Buhisan Branch</h3>
+                    <p style="font-size: 1.3rem; color: #4b3025; line-height: 1.5;">
                         Get ready, coffee lovers! Buhisan branch is opening soon!
                     </p>
                 </div>
