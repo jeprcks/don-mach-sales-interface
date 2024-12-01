@@ -4,7 +4,7 @@ namespace App\Domain\Users;
 
 class User
 {
-    private int $id;
+    private ?int $id;
 
     private string $username;
 
@@ -15,12 +15,12 @@ class User
         ?string $username = null,
         ?string $password = null
     ) {
-        $this->id = $id;
-        $this->username = $username;
-        $this->password = $password;
+        $this->id = $id ?? 0;
+        $this->username = $username ?? '';
+        $this->password = $password ?? '';
     }
 
-    public function getID()
+    public function getID(): ?int
     {
         return $this->id;
     }

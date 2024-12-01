@@ -132,4 +132,29 @@ class ProductAPIController extends Controller
 
         return response()->json(true, 200);
     }
+
+    public function destroy($id)
+    {
+        try {
+            $products = $this->registerProducts->findAll();
+            $product = collect($products)->first(function ($product) use ($id) {
+                return $product->getId() == $id;
+            });
+
+            if (!$product) {
+                return response()->json(['message' => 'Product not found'], 404);
+            }
+
+            $this->registerProducts->delete($product->getProduct_id());
+
+            return response()->json([
+                'message' => 'Product deleted successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error deleting product',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
