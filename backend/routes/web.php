@@ -18,13 +18,17 @@ Route::get('/products', function () {
 })->name('products');
 
 //auth
-Route::get('/', [AdminAuthController::class, 'showLoginForm']);
+Route::get('/', [AdminAuthController::class, 'showLoginForm'])->name('login');
+
+//admin login
+Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login');
+Route::get('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
 //product
 Route::get('/products', [ProductWebController::class, 'index'])->name('product.index');
 Route::post('/products/update', [ProductWebController::class, 'updateProduct'])->name('product.update');
 Route::post('/products/create', [ProductWebController::class, 'createProducts'])->name('product.create');
-Route::get('/home', [HomeWebController::class, 'index'])->name('homepage');
+Route::get('/home', [HomeWebController::class, 'index'])->name('home');
 
 //users
 Route::get('/users', [UserWEBController::class, 'index'])->name('users.index');

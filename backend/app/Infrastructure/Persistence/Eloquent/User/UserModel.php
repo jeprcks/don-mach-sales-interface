@@ -11,11 +11,11 @@ class UserModel extends Model
     protected $fillable = [
         'username',
         'password',
-        'api_token'
+        'api_token',
     ];
 
     protected $hidden = [
         'password',
-        'api_token'
+        'api_token',
     ];
 }

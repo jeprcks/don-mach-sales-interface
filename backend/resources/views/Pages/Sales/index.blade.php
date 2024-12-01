@@ -202,7 +202,7 @@
 
                 <div class="cart-summary">
                     <p>Subtotal:</p>
-                    <p class="total-price" id="subtotal">$0.00</p>
+                    <p class="total-price" id="subtotal">₱0.00</p>
                 </div>
 
                 <button class="btn btn-success checkout-btn" onclick="showCheckoutModal()">Proceed to Checkout</button>
@@ -252,7 +252,7 @@
                 let row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${item.name}</td>
-                    <td>$${item.price.toFixed(2)}</td>
+                    <td>₱${item.price.toFixed(2)}</td>
                     <td>
                         <div class="quantity-controls">
                             <button class="btn btn-sm btn-secondary" onclick="updateQuantity(${index}, -1)">-</button>
@@ -265,7 +265,7 @@
                 cartBody.appendChild(row);
             });
 
-            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('subtotal').textContent = `₱${subtotal.toFixed(2)}`;
         }
 
         // Add item to the cart
@@ -353,7 +353,7 @@
 
                         cart.forEach(item => {
                             transactionContent +=
-                            `
+                                `
                             <li>${item.name} - ${item.quantity} x ₱${item.price} = ₱${item.totalPrice.toFixed(2)}</li>`;
                         });
 
