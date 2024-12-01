@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Sales\API;
 
-use App\Http\Controllers\Controller;
-use App\Domain\Sales\Sales;
 use App\Application\Sales\RegisterSales;
+use App\Http\Controllers\Controller;
+use App\Infrastructure\Persistence\Eloquent\Sales\SalesModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SalesAPIController extends Controller
 {
@@ -20,14 +21,15 @@ class SalesAPIController extends Controller
     {
         try {
             $sales = $this->registerSales->findAll();
+
             return response()->json([
                 'sales' => $sales,
-                'message' => 'Sales retrieved successfully'
+                'message' => 'Sales retrieved successfully',
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error retrieving sales',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -35,30 +37,48 @@ class SalesAPIController extends Controller
     public function createSales(Request $request)
     {
         try {
-            $validated = $request->validate([
-                'order_list' => 'required|array',
-                'total_order' => 'required|numeric',
-                'quantity' => 'required|numeric'
-            ]);
+            DB::beginTransaction();
 
-            $sales = new Sales(
-                null,
-                json_encode($validated['order_list']),
-                $validated['quantity'],
-                (string)$validated['total_order']
-            );
+            // Create the sale record
+            $sale = new SalesModel;
+            $sale->order_list = json_encode($request->order_list);
+            $sale->total_order = $request->total_order;
+            $sale->quantity = $request->quantity;
+            $sale->save();
 
-            $this->registerSales->create($sales);
+            // Update product stock
+            foreach ($request->order_list as $item) {
+                $product = DB::table('product')
+                    ->where('product_id', $item['product_id'])
+                    ->first();
 
-            return response()->json([
-                'message' => 'Sale created successfully'
-            ], 201);
+                if (! $product) {
+                    DB::rollBack();
+
+                    return response()->json(['error' => 'Product not found'], 404);
+                }
+
+                $newStock = $product->product_stock - $item['quantity'];
+
+                if ($newStock < 0) {
+                    DB::rollBack();
+
+                    return response()->json(['error' => 'Insufficient stock for '.$item['name']], 400);
+                }
+
+                DB::table('product')
+                    ->where('product_id', $item['product_id'])
+                    ->update(['product_stock' => $newStock]);
+            }
+
+            DB::commit();
+
+            return response()->json(['message' => 'Sale created successfully'], 201);
 
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error creating sale',
-                'error' => $e->getMessage()
-            ], 500);
+            DB::rollBack();
+
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }

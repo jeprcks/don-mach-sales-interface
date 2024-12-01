@@ -14,7 +14,7 @@
                 style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; width: 95%; max-width: 1600px; justify-content: center; margin: 40px auto;">
                 <!-- Branch 1 -->
                 <div
-                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
+                    style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
                     <div style="width: 100%; height: 600px; margin-bottom: 20px; position: relative;">
                         <img src="/images/Calambabranch.jpg" alt="Opol Branch"
                             style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" />
@@ -29,7 +29,7 @@
 
                 <!-- Branch 2 -->
                 <div
-                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
+                    style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
                     <div style="width: 100%; height: 600px; margin-bottom: 20px; position: relative;">
                         <img src="/images/branchdasmarinas.png" alt="Dasmarinas Branch"
                             style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" />
@@ -42,7 +42,7 @@
                 </div>
                 <!-- Branch 3 -->
                 <div
-                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
+                    style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
                     <div style="width: 100%; height: 600px; margin-bottom: 20px; position: relative;">
                         <img src="/images/branchlingayen.png" alt="Lingayen Branch"
                             style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" />
@@ -55,7 +55,7 @@
 
                 <!-- Branch 4 -->
                 <div
-                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
+                    style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
                     <div style="width: 100%; height: 600px; margin-bottom: 20px; position: relative;">
                         <img src="/images/branchopol.jpg" alt="Pol Branch"
                             style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" />
@@ -66,7 +66,7 @@
                     </p>
                 </div>
                 <div
-                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
+                    style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
                     <div style="width: 100%; height: 600px; margin-bottom: 20px; position: relative;">
                         <img src="/images/branchtabunok.png" alt="Pol Branch"
                             style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" />
@@ -77,7 +77,7 @@
                     </p>
                 </div>
                 <div
-                    style="background-color: #fff8e7; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
+                    style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); padding: 25px;">
                     <div style="width: 100%; height: 600px; margin-bottom: 20px; position: relative;">
                         <img src="/images/branchbuhisan.png" alt="Pol Branch"
                             style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;" />

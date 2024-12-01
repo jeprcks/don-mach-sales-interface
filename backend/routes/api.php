@@ -3,6 +3,7 @@
 use App\Http\Controllers\Product\API\ProductAPIController;
 use App\Http\Controllers\Sales\API\SalesAPIController;
 use App\Http\Controllers\Users\API\UsersAPIController;
+use App\Http\Controllers\Transaction\API\TransactionAPIController;
 use Illuminate\Support\Facades\Route;
 
 //sales
@@ -21,3 +22,6 @@ Route::post('/create/users', [UsersAPIController::class, 'create']);
 Route::put('/update/users/{id}', [UsersAPIController::class, 'update']);
 Route::delete('/delete/users/{id}', [UsersAPIController::class, 'destroy']);
 Route::get('/users/{username}', [UsersAPIController::class, 'findByUsername']);
+
+//transaction
+Route::get('/transactions', [TransactionAPIController::class, 'index']);
