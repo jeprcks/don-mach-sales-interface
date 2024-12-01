@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Application\Sales\RegisterSales;
+namespace App\Application\Sales;
 
-use App\Domain\Entities\Sales;
-use App\Domain\Entities\SalesRepository;
+use App\Domain\Sales\Sales;
+use App\Domain\Sales\SalesRepository;
 
 class RegisterSales
 {
@@ -17,5 +17,10 @@ class RegisterSales
     public function create(Sales $sales)
     {
         $this->salesRepository->create($sales);
+    }
+
+    public function findAll(): array
+    {
+        return $this->salesRepository->findAll();
     }
 }

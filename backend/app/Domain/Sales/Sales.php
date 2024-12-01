@@ -4,20 +4,16 @@ namespace App\Domain\Sales;
 
 class Sales
 {
-    private int $id;
-
-    private string $order_list;
-
-    private int $quantity;
-
-    private string $total_order;
+    private ?int $id;
+    private ?string $order_list;
+    private ?int $quantity;
+    private ?string $total_order;
 
     public function __construct(
         ?int $id = null,
         ?string $order_list = null,
         ?int $quantity = null,
-        ?string $total_order = null,
-
+        ?string $total_order = null
     ) {
         $this->id = $id;
         $this->order_list = $order_list;
