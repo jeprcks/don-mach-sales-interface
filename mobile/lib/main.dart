@@ -9,6 +9,7 @@ import 'package:flutterproject2/pages/product_page/product.dart';
 import 'Auth/login_page.dart';
 import 'package:flutterproject2/pages/SalesPage/sales_page.dart';
 // import 'package:flutterproject2/pages/Setting/settings.dart';
+import 'package:flutterproject2/bloc/product_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,8 +21,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => UserBloc(), // Ensure UserBloc is properly defined
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => UserBloc()),
+        BlocProvider(create: (context) => ProductBloc()),
+      ],
       child: MaterialApp(
         initialRoute: '/splashscreen',
         routes: {

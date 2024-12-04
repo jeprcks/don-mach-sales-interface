@@ -21,8 +21,12 @@
                 <a class="nav-link text-white" href="/transaction">Transaction</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link text-white" href="/products/archive">Archived Products</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link text-white" href="/users">Create User</a>
             </li>
+
             <a class="nav-link text-white" href="/">Logout</a>
         </ul>
     </div>

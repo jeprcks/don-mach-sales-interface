@@ -49,7 +49,11 @@ Route::delete('/product/delete/{product_id}', [ProductWebController::class, 'del
 
 //validation
 Route::post('/check-product-image', [ProductWebController::class, 'checkProductImage'])->name('product.checkImage');
+
 //get kuha data or views
 //post kay create
 //put kay update
 //delete/del kay delete
+
+Route::get('/products/archive', [ProductWebController::class, 'archive'])->name('product.archive');
+Route::post('/products/{product_id}/restore', [ProductWebController::class, 'restore'])->name('product.restore');

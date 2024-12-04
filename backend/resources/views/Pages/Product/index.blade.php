@@ -8,9 +8,13 @@
 
     <div style="padding: 20px; background-color: #f7f0e3; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
-        <div style="display: flex; justify-content: flex-end;">
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <a href="{{ route('product.archive') }}"
+                style="padding: 10px; background-color: #6b4226; color: white; text-decoration: none; border-radius: 8px; margin-bottom: 20px;">
+                View Archived Products
+            </a>
             <button onclick="showAddProductModal()"
-                style="padding: 10px; background-color: #4b3025; color: white; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 20px; font-weight: bold; font-size: 1rem; transition: background-color 0.2s ease-in-out;">
+                style="padding: 10px; background-color: #4b3025; color: white; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 20px;">
                 + Add Product
             </button>
         </div>
