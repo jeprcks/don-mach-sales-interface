@@ -12,6 +12,7 @@ class SalesWEBController extends Controller
     public function index()
     {
         $products = DB::table('product')
+            ->whereNull('deleted_at')
             ->select('product_id', 'product_name', 'product_price', 'product_stock', 'product_image', 'description')
             ->get();
 

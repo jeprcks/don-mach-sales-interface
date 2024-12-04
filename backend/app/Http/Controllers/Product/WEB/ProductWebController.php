@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Infrastructure\Persistence\Eloquent\Product\ProductModel;
 
 class ProductWebController extends Controller
 {
@@ -173,12 +174,14 @@ class ProductWebController extends Controller
 
     public function deleteitem($id)
     {
-        $deletedProduct = $this->registerProducts->delete($id);
-        if (! $deletedProduct) {
-            return redirect()->route('product.index')->with('error', 'Product not found');
+        $product = ProductModel::where('product_id', $id)->first();
+        if ($product) {
+            $product->delete(); // This will now soft delete
+            return redirect()->route('product.index')
+                ->with('success', 'Product moved to archive successfully');
         }
-
-        return redirect()->route('product.index')->with('success', 'Product deleted successfully');
+        return redirect()->route('product.index')
+            ->with('error', 'Product not found');
     }
 
     public function checkProductName(Request $request)
@@ -220,5 +223,31 @@ class ProductWebController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    public function archive()
+    {
+        $archivedProducts = ProductModel::onlyTrashed()->get()->map(function ($product) {
+            return [
+                'product_id' => $product->product_id,
+                'product_name' => $product->product_name,
+                'product_price' => $product->product_price,
+                'product_stock' => $product->product_stock,
+                'description' => $product->description,
+                'product_image' => $product->product_image,
+            ];
+        })->toArray();
+
+        return view('Pages.Archive.index', compact('archivedProducts'));
+    }
+
+    public function restore($product_id)
+    {
+        ProductModel::onlyTrashed()
+            ->where('product_id', $product_id)
+            ->restore();
+
+        return redirect()->route('product.archive')
+            ->with('success', 'Product restored successfully');
     }
 }

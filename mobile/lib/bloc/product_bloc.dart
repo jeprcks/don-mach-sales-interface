@@ -1,5 +1,7 @@
 // lib/blocs/product_bloc.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'product_event.dart';
 import 'product_state.dart';
 import 'package:flutterproject2/models/productmodel.dart';
@@ -9,6 +11,7 @@ import 'package:flutterproject2/models/productmodel.dart';
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final List<Product> _products = [
     Product(
+      productId: '1',
       name: 'Brown Spanish Latte and Oreo Coffee',
       description: 'Brown Spanish Latte is basically espresso-based coffee with milk. Oreo Iced Coffee Recipe is perfect for a hot summer day.',
       imagePath: 'assets/Productlist/donmacnew.jpg',
@@ -16,6 +19,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       price: 39,
     ),
     Product(
+      productId: '2',
       name: 'Black Forest',
       description: 'A decadent symphony of flavors featuring luxurious Belgian dark chocolate and succulent Taiwanese strawberries, delicately infused with velvety milk',
       imagePath: 'assets/Productlist/blackforest.jpg',
@@ -23,6 +27,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       price: 39,
     ),
     Product(
+      productId: '3',
       name: 'Don darko',
       description: 'Crafted from the finest Belgian dark chocolate, harmoniously blended with creamy milk',
       imagePath: 'assets/Productlist/dondarko.jpg',
@@ -30,6 +35,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       price: 39,
     ),
     Product(
+      productId: '4',
       name: 'Donya Berry',
       description: 'A tantalizing fusion of succulent Taiwanese strawberries mingled with creamy milk',
       imagePath: 'assets/Productlist/donyaberry.jpg',
@@ -37,6 +43,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       price: 39,
     ),
     Product(
+      productId: '5',
       name: 'Iced Caramel',
       description: 'An exquisite blend of freshly pulled espresso, smooth milk, and luscious caramel syrup, served over a bed of ice',
       imagePath: 'assets/Productlist/icedcaramel.jpg',
@@ -44,6 +51,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       price: 39,
     ),
     Product(
+      productId: '6',
       name: 'Macha Berry',
       description: 'A captivating harmony of Japanese matcha and Taiwanese strawberries, artfully intertwined with creamy milk',
       imagePath: 'assets/Productlist/matchaberry.jpg',
@@ -51,6 +59,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       price: 39,
     ),
     Product(
+      productId: '7',
       name: 'Macha',
       description: 'A macchiato has steamed and frothed milk, and that foam goes on top of the shot of espresso or matcha.',
       imagePath: 'assets/Productlist/macha.jpg',
@@ -63,31 +72,46 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<LoadProducts>((event, emit) async {
       emit(ProductLoadInProgress());
       try {
-        // Simulate a delay (e.g., fetching from a database)
-        await Future.delayed(const Duration(seconds: 1));
+        print('Fetching products...');
+        final response = await http.get(
+          Uri.parse('http://10.0.2.2:8000/api/products'),
+        );
+        
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> data = json.decode(response.body);
+          final List<dynamic> productList = data['products'];
+          final products = productList.map((json) => Product.fromJson(json)).toList();
+          print('Products loaded: ${products.length}');
+          emit(ProductLoadSuccess(products));
+        } else {
+          print('Failed to load products: ${response.statusCode}');
+          emit(const ProductOperationFailure('Failed to load products'));
+        }
+      } catch (e) {
+        print('Error loading products: $e');
+        emit(ProductOperationFailure(e.toString()));
+      }
+    });
+
+    on<AddProduct>((event, emit) async {
+      try {
+        // Add API call here for creating product
         emit(ProductLoadSuccess(List.from(_products)));
       } catch (e) {
         emit(ProductOperationFailure(e.toString()));
       }
     });
 
-    on<AddProduct>((event, emit) {
+    on<EditProduct>((event, emit) async {
       try {
-        _products.add(event.product);
-        emit(ProductLoadSuccess(List.from(_products)));
-      } catch (e) {
-        emit(ProductOperationFailure(e.toString()));
-      }
-    });
-
-    on<EditProduct>((event, emit) {
-      try {
-        final index = _products.indexWhere((p) => p.name == event.updatedProduct.name);
+        // Add API call here for updating product
+        final index = _products.indexWhere((p) => p.productId == event.updatedProduct.productId);
         if (index != -1) {
           _products[index] = event.updatedProduct;
           emit(ProductLoadSuccess(List.from(_products)));
-        } else {
-          emit(const ProductOperationFailure("Product not found"));
         }
       } catch (e) {
         emit(ProductOperationFailure(e.toString()));

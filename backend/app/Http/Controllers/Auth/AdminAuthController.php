@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 class AdminAuthController extends Controller
 {
     private const ADMIN_USERNAME = 'admin';
+
     private const ADMIN_PASSWORD = 'admin';
 
     public function showLoginForm()
@@ -15,6 +16,7 @@ class AdminAuthController extends Controller
         if (session('is_admin')) {
             return redirect()->route('home');
         }
+
         return view('auth.admin-login');
     }
 
@@ -42,6 +44,7 @@ class AdminAuthController extends Controller
     public function logout()
     {
         session()->forget(['is_admin', 'username']);
+
         return redirect()->route('login');
     }
 }

@@ -6,6 +6,7 @@ use App\Application\Product\RegisterProducts;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class ProductAPIController extends Controller
 {
@@ -154,6 +155,25 @@ class ProductAPIController extends Controller
             return response()->json([
                 'message' => 'Error deleting product',
                 'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function index()
+    {
+        try {
+            $products = DB::table('product')
+                ->whereNull('deleted_at')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'products' => $products
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
             ], 500);
         }
     }
