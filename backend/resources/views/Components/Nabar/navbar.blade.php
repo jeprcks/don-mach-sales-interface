@@ -12,6 +12,9 @@
                 <a class="nav-link text-white" href="/home">Home</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link text-white" href="/dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link text-white" href="/products">Products</a>
             </li>
             <li class="nav-item">
@@ -26,6 +29,7 @@
             <li class="nav-item">
                 <a class="nav-link text-white" href="/users">Create User</a>
             </li>
+
 
             <a class="nav-link text-white" href="/">Logout</a>
         </ul>

@@ -54,16 +54,25 @@
         </div>
     </div>
 
+    <!-- Enhanced Transaction Modal -->
     <div id="checkoutModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h5>Transaction Summary</h5>
+                <h5 class="modal-title">Transaction Receipt</h5>
+                <div class="receipt-logo">
+                    <i class="fas fa-receipt fa-2x"></i>
+                </div>
             </div>
             <div class="modal-body transaction-summary" id="transaction-details">
                 <!-- Transaction details will be inserted here -->
             </div>
             <div class="modal-footer">
-                <button class="btn btn-danger" onclick="closeCheckoutModal()">Close</button>
+                <button class="btn btn-primary" onclick="printReceipt()">
+                    <i class="fas fa-print"></i> Print Receipt
+                </button>
+                <button class="btn btn-danger" onclick="closeCheckoutModal()">
+                    <i class="fas fa-times"></i> Close
+                </button>
             </div>
         </div>
     </div>
@@ -80,7 +89,9 @@
             const options = {
                 year: 'numeric',
                 month: 'long',
-                day: 'numeric'
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
             };
             return today.toLocaleDateString(undefined, options);
         }
@@ -161,6 +172,38 @@
             updateCart();
         }
 
+        // Print receipt function
+        function printReceipt() {
+            const receiptWindow = window.open('', '', 'width=800,height=600');
+            const receiptContent = document.getElementById('transaction-details').innerHTML;
+
+            receiptWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Transaction Receipt</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            .receipt-header { text-align: center; margin-bottom: 20px; }
+                            .receipt-items { margin: 20px 0; }
+                            .receipt-total { font-weight: bold; margin-top: 20px; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="receipt-header">
+                            <h2>Cafe Amadeo</h2>
+                            <p>Transaction Receipt</p>
+                        </div>
+                        ${receiptContent}
+                    </body>
+                </html>
+            `);
+
+            receiptWindow.document.close();
+            receiptWindow.focus();
+            receiptWindow.print();
+            receiptWindow.close();
+        }
+
         // Show the checkout modal
         function showCheckoutModal() {
             if (cart.length === 0) {
@@ -191,19 +234,53 @@
                         let transactionDetails = document.getElementById('transaction-details');
 
                         let transactionContent = `
-                        <h5>Order #${data.transaction_id}</h5>
-                        <p>${getCurrentDate()}</p>
-                        <ul>`;
+                            <div class="receipt-header">
+                                <h4>Don Macchiatos</h4>
+                                <p class="text-muted">Fuel your day, one cup at a time</p>
+                                <div class="receipt-details">
+                                    <p><strong>Order #${data.transaction_id}</strong></p>
+                                    <p>${getCurrentDate()}</p>
+                                </div>
+                            </div>
+                            <div class="receipt-items">
+                                <table class="table table-borderless">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Qty</th>
+                                            <th class="text-end">Price</th>
+                                            <th class="text-end">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>`;
 
                         cart.forEach(item => {
-                            transactionContent +=
-                                `
-                            <li>${item.name} - ${item.quantity} x ₱${item.price} = ₱${item.totalPrice.toFixed(2)}</li>`;
+                            transactionContent += `
+                                <tr>
+                                    <td>${item.name}</td>
+                                    <td>${item.quantity}</td>
+                                    <td class="text-end">₱${item.price.toFixed(2)}</td>
+                                    <td class="text-end">₱${item.totalPrice.toFixed(2)}</td>
+                                </tr>`;
                         });
 
-                        transactionContent +=
-                            `</ul>
-                        <p><strong>Total: ₱${cart.reduce((sum, item) => sum + item.totalPrice, 0).toFixed(2)}</strong></p>`;
+                        const total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+
+                        transactionContent += `
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="receipt-total">
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <h5>Total Amount:</h5>
+                                    <h5>₱${total.toFixed(2)}</h5>
+                                </div>
+                            </div>
+                            <div class="receipt-footer text-center mt-4">
+                                <p>Thank you for choosing Don Macchiatos!</p>
+                                <p class="text-muted">Please come again</p>
+                            </div>`;
 
                         transactionDetails.innerHTML = transactionContent;
                         modal.classList.add('active');
@@ -347,29 +424,7 @@
             background-color: darkred;
         }
 
-        /* Modal styles */
-        .modal-content {
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .modal-header {
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
-        }
-
-        .modal-body {
-            padding: 20px 0;
-        }
-
-        .modal-footer {
-            padding-top: 10px;
-            border-top: 2px solid #ddd;
-        }
-
+        /* Enhanced Modal styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -380,35 +435,75 @@
             display: none;
             justify-content: center;
             align-items: center;
+            z-index: 1050;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            text-align: center;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            color: #6b4226;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .receipt-logo {
+            color: #6b4226;
+            margin-bottom: 15px;
+        }
+
+        .receipt-details {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .receipt-items {
+            margin: 20px 0;
+        }
+
+        .receipt-items table {
+            width: 100%;
+        }
+
+        .receipt-items th {
+            color: #6b4226;
+            font-weight: 600;
+        }
+
+        .receipt-total {
+            margin-top: 20px;
+        }
+
+        .receipt-footer {
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .modal-footer {
+            border-top: 2px solid #f0f0f0;
+            padding-top: 20px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
         }
 
         .modal-overlay.active {
             display: flex;
-        }
-
-        /* Additional Styling for Transaction Modal */
-        .transaction-summary h5 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .transaction-summary ul {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 20px;
-            font-size: 16px;
-            color: #666;
-        }
-
-        .transaction-summary li {
-            padding: 5px 0;
-        }
-
-        .transaction-summary .total {
-            font-weight: bold;
-            font-size: 20px;
-            color: #333;
         }
     </style>
 

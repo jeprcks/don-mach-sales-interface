@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AdminAuthController;
+use App\Http\Controllers\Dashboard\WEB\DashboardWEBController;
 use App\Http\Controllers\Home\WEB\HomeWebController;
 use App\Http\Controllers\Product\WEB\ProductWebController;
 use App\Http\Controllers\Sales\WEB\SalesWEBController;
@@ -57,3 +58,6 @@ Route::post('/check-product-image', [ProductWebController::class, 'checkProductI
 
 Route::get('/products/archive', [ProductWebController::class, 'archive'])->name('product.archive');
 Route::post('/products/{product_id}/restore', [ProductWebController::class, 'restore'])->name('product.restore');
+
+//dashboard
+Route::get('/dashboard', [DashboardWEBController::class, 'index'])->name('dashboard');
