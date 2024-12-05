@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Product\WEB;
 use App\Application\Product\RegisterProducts;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use App\Infrastructure\Persistence\Eloquent\Product\ProductModel;
 
 class ProductWebController extends Controller
 {
@@ -18,10 +21,21 @@ class ProductWebController extends Controller
 
     public function index()
     {
-
-        $productModel = $this->registerProducts->findAll();
-        $products = array_map(fn ($productModel) => $productModel->toArray(), $productModel);
-        // dd($products);
+        $products = $this->registerProducts->findAll();
+        if (empty($products)) {
+            $products = [];
+        } else {
+            $products = array_map(function ($product) {
+                return [
+                    'product_id' => $product->getProduct_id(),
+                    'product_name' => $product->getProduct_name(),
+                    'product_price' => $product->getProduct_price(),
+                    'product_stock' => $product->getProduct_stock(),
+                    'description' => $product->getDescription(),
+                    'product_image' => $product->getProduct_image(),
+                ];
+            }, $products);
+        }
 
         return view('Pages.Product.index', compact('products'));
     }
@@ -44,43 +58,45 @@ class ProductWebController extends Controller
 
     public function createProducts(Request $request)
     {
-        $data = $request->all();
-        $validate = Validator::make($data, [
-            'productName' => 'required|string',
-            'productPrice' => 'required|numeric',
-            'productStock' => 'required|numeric',
-            'productImage' => 'nullable|file|image',
+        $validate = Validator::make($request->all(), [
+            'productName' => [
+                'required',
+                'string',
+                Rule::unique('product', 'product_name'),
+            ],
+            'productPrice' => 'required|numeric|min:0',
+            'productStock' => 'required|integer|min:0',
+            'productImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'productDescription' => 'required|string',
-
         ]);
 
         if ($validate->fails()) {
-            return response()->json($validate->errors(), 422);
-        }
-        if ($request->file('productImage')) {
-            $image = $request->file('productImage');
-            $destinationpath = 'images';
-
-            $imageName = time().'.'.$image->getClientOriginalExtension();
-            $image->move($destinationpath, $imageName);
-
-            $data['image'] = $imageName;
-        } else {
-            $data['image'] = 'default.jpg';
+            return response()->json(['errors' => $validate->errors()], 422);
         }
 
-        // dd($data);
+        try {
+            $productId = $this->generateProductId();
+            $imageName = 'default.jpg';
 
-        $this->registerProducts->create(
-            $this->generateProductId(),
-            $data['productName'],
-            $data['productPrice'],
-            'default.jpg',
-            $data['productStock'],
-            $data['productDescription'],
-        );
+            if ($request->hasFile('productImage')) {
+                $image = $request->file('productImage');
+                $imageName = time().'.'.$image->getClientOriginalExtension();
+                $image->move(public_path('images'), $imageName);
+            }
 
-        return redirect()->route('product.index')->with('success', 'Product successfullly created');
+            $this->registerProducts->create(
+                $productId,
+                $request->productName,
+                (float) $request->productPrice,
+                $imageName,
+                (int) $request->productStock,
+                $request->productDescription
+            );
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['errors' => ['general' => [$e->getMessage()]]], 500);
+        }
     }
 
     public function generateProductId()
@@ -101,60 +117,137 @@ class ProductWebController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'productID' => 'required|string',
-            'productName' => 'required|string',
+            'productName' => [
+                'required',
+                'string',
+                Rule::unique('product', 'product_name')->ignore($request->productID, 'product_id'),
+            ],
             'productPrice' => 'required|numeric',
             'productStock' => 'required|numeric',
-            'productImage' => 'nullable|image,',
+            'productImage' => [
+                'nullable',
+                'image',
+                'mimes:jpeg,png,jpg,gif',
+                'max:2048',
+            ],
             'productDescription' => 'required|string',
         ]);
+
         if ($validate->fails()) {
-            return response()->json($validate->errors(), 422);
-        }
-        $data = $request->all();
-        // dd($data);
-
-        $existingProduct = $this->registerProducts->findByProductID($data['productID']);
-        if (! $existingProduct) {
-            return response()->json(['message' => 'Product Not Found!', 'id' => $data['productID']], 404);
+            return response()->json(['errors' => $validate->errors()], 422);
         }
 
-        if ($request->file('image')) {
+        try {
+            $data = $request->all();
+            $existingProduct = $this->registerProducts->findByProductID($data['productID']);
 
-            if ($existingProduct->getProduct_image() !== 'default.jpg') {
-                File::delete('images/'.$existingProduct->getProduct_image());
-
+            if (! $existingProduct) {
+                return response()->json(['errors' => ['general' => ['Product not found']]], 404);
             }
-            $image = $request->file('image');
-            $destination = 'images';
-            $imageName = time().'.'.$image->getClientOriginalExtension();
-            $image->move($destinationPath, $imageName);
-            $data['image'] = $imageName;
-        } else {
-            if ($existingProduct->getProduct_image() === null) {
-                $data['image'] = 'default.jpg';
+
+            if ($request->hasFile('productImage')) {
+                if ($existingProduct->getProduct_image() !== 'default.jpg') {
+                    File::delete(public_path('images/'.$existingProduct->getProduct_image()));
+                }
+                $image = $request->file('productImage');
+                $imageName = time().'.'.$image->getClientOriginalExtension();
+                $image->move(public_path('images'), $imageName);
+                $data['image'] = $imageName;
             } else {
-                $data['image'] = $existingProduct->getProduct_image();
+                $data['image'] = $existingProduct->getProduct_image() ?? 'default.jpg';
             }
-        }
-        $this->registerProducts->update(
-            $data['productID'],
-            $data['productName'],
-            $data['productPrice'],
-            $data['image'],
-            $data['productStock'],
-            $data['productDescription']
-        );
 
-        return response()->json(true, 200);
+            $this->registerProducts->update(
+                $data['productID'],
+                $data['productName'],
+                (float) $data['productPrice'],
+                $data['image'],
+                (int) $data['productStock'],
+                $data['productDescription']
+            );
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['errors' => ['general' => [$e->getMessage()]]], 500);
+        }
     }
 
     public function deleteitem($id)
     {
-        $deletedProduct = $this->registerProducts->delete($id);
-        if (! $deletedProduct) {
-            return redirect()->route('product.index')->with('error', 'Product not found');
+        $product = ProductModel::where('product_id', $id)->first();
+        if ($product) {
+            $product->delete(); // This will now soft delete
+            return redirect()->route('product.index')
+                ->with('success', 'Product moved to archive successfully');
+        }
+        return redirect()->route('product.index')
+            ->with('error', 'Product not found');
+    }
+
+    public function checkProductName(Request $request)
+    {
+        $exists = $this->registerProducts->findByProductName($request->productName) !== null;
+
+        return response()->json(['exists' => $exists]);
+    }
+
+    public function validateProductImage(Request $request)
+    {
+        if (! $request->hasFile('productImage')) {
+            return response()->json(['exists' => false]);
         }
 
-        return redirect()->route('product.index')->with('success', 'Product deleted successfully');
+        try {
+            $image = $request->file('productImage');
+            $imageHash = md5_file($image->getPathname());
+
+            // Get all products from database
+            $products = $this->registerProducts->findAll();
+
+            foreach ($products as $product) {
+                $existingImagePath = public_path('images/'.$product->getProduct_image());
+
+                if (file_exists($existingImagePath) && $product->getProduct_image() !== 'default.jpg') {
+                    $existingHash = md5_file($existingImagePath);
+
+                    if ($existingHash === $imageHash) {
+                        return response()->json([
+                            'exists' => true,
+                            'productName' => $product->getProduct_name(),
+                        ]);
+                    }
+                }
+            }
+
+            return response()->json(['exists' => false]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function archive()
+    {
+        $archivedProducts = ProductModel::onlyTrashed()->get()->map(function ($product) {
+            return [
+                'product_id' => $product->product_id,
+                'product_name' => $product->product_name,
+                'product_price' => $product->product_price,
+                'product_stock' => $product->product_stock,
+                'description' => $product->description,
+                'product_image' => $product->product_image,
+            ];
+        })->toArray();
+
+        return view('Pages.Archive.index', compact('archivedProducts'));
+    }
+
+    public function restore($product_id)
+    {
+        ProductModel::onlyTrashed()
+            ->where('product_id', $product_id)
+            ->restore();
+
+        return redirect()->route('product.archive')
+            ->with('success', 'Product restored successfully');
     }
 }

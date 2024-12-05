@@ -1,38 +1,33 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-interface Transaction {
-  orderNumber: number;
+export interface TransactionDetail {
+  orderId: number;
   date: string;
-  orderList: Product[];
-  totalPrice: number;
+  items: Array<{
+    name: string;
+    quantity: number;
+    price: number;
+    total: number;
+  }>;
+  total: number;
 }
 
 interface TransactionContextType {
-  transactions: Transaction[];
-  addTransaction: (transaction: Transaction) => void;
+  transactions: TransactionDetail[];
+  addTransaction: (transaction: TransactionDetail) => void;
 }
 
-// Create the Transaction Context with default value
 const TransactionContext = createContext<TransactionContextType>({
   transactions: [],
-  addTransaction: () => { } // Default empty function
+  addTransaction: () => { }
 });
 
 interface TransactionProviderProps {
   children: ReactNode;
 }
 
-// Define the Provider Component
 export function TransactionProvider({ children }: TransactionProviderProps) {
-  // Load initial state from localStorage if available
-  const [transactions, setTransactions] = useState<Transaction[]>(() => {
+  const [transactions, setTransactions] = useState<TransactionDetail[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('transactions');
       return saved ? JSON.parse(saved) : [];
@@ -40,19 +35,16 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
     return [];
   });
 
-  // Save to localStorage whenever transactions change
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('transactions', JSON.stringify(transactions));
     }
   }, [transactions]);
 
-  // Add a new transaction
-  const addTransaction = (transaction: Transaction) => {
+  const addTransaction = (transaction: TransactionDetail) => {
     setTransactions((prev) => [...prev, transaction]);
   };
 
-  // Provide transactions and the addTransaction function
   return (
     <TransactionContext.Provider value={{ transactions, addTransaction }}>
       {children}
@@ -60,7 +52,6 @@ export function TransactionProvider({ children }: TransactionProviderProps) {
   );
 }
 
-// Hook to use the Transaction Context
 export function useTransactions(): TransactionContextType {
   const context = useContext(TransactionContext);
   if (!context) {
