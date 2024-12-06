@@ -16,15 +16,23 @@ export const useProducts = () => {
 
     const fetchProducts = async () => {
         try {
+            setLoading(true);
             const response = await fetch('http://localhost:8000/api/products');
+
             if (!response.ok) {
-                throw new Error('Failed to fetch products');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+
             const data = await response.json();
+            if (!data.products) {
+                throw new Error('Products data is missing from response');
+            }
+
             setProducts(data.products);
-            setLoading(false);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred');
+            console.error('Error fetching products:', err);
+        } finally {
             setLoading(false);
         }
     };

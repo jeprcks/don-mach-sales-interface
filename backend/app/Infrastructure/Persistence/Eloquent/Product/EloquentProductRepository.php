@@ -9,17 +9,18 @@ class EloquentProductRepository implements ProductRepository
 {
     public function findAll(): array
     {
-        return ProductModel::all()->map(
-            fn ($productModel) => new Product(
+        $products = ProductModel::whereNull('deleted_at')->get();
+        return $products->map(function ($productModel) {
+            return new Product(
                 $productModel->id,
                 $productModel->product_id,
                 $productModel->product_image,
                 $productModel->product_name,
-                $productModel->product_price,
+                (float)$productModel->product_price,
                 $productModel->description,
-                $productModel->product_stock,
-            )
-        )->toArray();
+                (int)$productModel->product_stock
+            );
+        })->all();
     }
 
     public function create(Product $product): void

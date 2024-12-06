@@ -12,14 +12,22 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final List<Product> _products = [
     Product(
       productId: '1',
-      name: 'Brown Spanish Latte and Oreo Coffee',
-      description: 'Brown Spanish Latte is basically espresso-based coffee with milk. Oreo Iced Coffee Recipe is perfect for a hot summer day.',
-      imagePath: 'assets/Productlist/donmacnew.jpg',
+      name: 'Brown Spanish Latte',
+      description: 'Brown Spanish Latte is basically espresso-based coffee with milk.',
+      imagePath: 'assets/Productlist/brownspanishlatte.jpg',
       stock: 1000,
       price: 39,
     ),
     Product(
       productId: '2',
+      name: 'Oreo Coffee',
+      description: 'Oreo Iced Coffee Recipe is perfect for a hot summer day.',
+      imagePath: 'assets/Productlist/oreo.jpg',
+      stock: 1000,
+      price: 39,
+    ),
+    Product(
+      productId: '3',
       name: 'Black Forest',
       description: 'A decadent symphony of flavors featuring luxurious Belgian dark chocolate and succulent Taiwanese strawberries, delicately infused with velvety milk',
       imagePath: 'assets/Productlist/blackforest.jpg',
@@ -27,7 +35,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       price: 39,
     ),
     Product(
-      productId: '3',
+      productId: '4',
       name: 'Don darko',
       description: 'Crafted from the finest Belgian dark chocolate, harmoniously blended with creamy milk',
       imagePath: 'assets/Productlist/dondarko.jpg',
@@ -35,7 +43,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       price: 39,
     ),
     Product(
-      productId: '4',
+      productId: '5',
       name: 'Donya Berry',
       description: 'A tantalizing fusion of succulent Taiwanese strawberries mingled with creamy milk',
       imagePath: 'assets/Productlist/donyaberry.jpg',
@@ -43,7 +51,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       price: 39,
     ),
     Product(
-      productId: '5',
+      productId: '6',
       name: 'Iced Caramel',
       description: 'An exquisite blend of freshly pulled espresso, smooth milk, and luscious caramel syrup, served over a bed of ice',
       imagePath: 'assets/Productlist/icedcaramel.jpg',
@@ -51,7 +59,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       price: 39,
     ),
     Product(
-      productId: '6',
+      productId: '7',
       name: 'Macha Berry',
       description: 'A captivating harmony of Japanese matcha and Taiwanese strawberries, artfully intertwined with creamy milk',
       imagePath: 'assets/Productlist/matchaberry.jpg',
@@ -59,7 +67,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       price: 39,
     ),
     Product(
-      productId: '7',
+      productId: '8',
       name: 'Macha',
       description: 'A macchiato has steamed and frothed milk, and that foam goes on top of the shot of espresso or matcha.',
       imagePath: 'assets/Productlist/macha.jpg',

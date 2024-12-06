@@ -119,9 +119,6 @@
                     <div class="chart-card-header">
                         <h5><i class="fas fa-chart-line me-2"></i>Monthly Sales Trend</h5>
                         <div class="chart-actions">
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="fas fa-download"></i>
-                            </button>
                         </div>
                     </div>
                     <div class="chart-body">
@@ -134,9 +131,6 @@
                     <div class="chart-card-header">
                         <h5><i class="fas fa-chart-line me-2"></i>Yearly Sales Trend</h5>
                         <div class="chart-actions">
-                            <button class="btn btn-sm btn-outline-secondary">
-                                <i class="fas fa-download"></i>
-                            </button>
                         </div>
                     </div>
                     <div class="chart-body">
