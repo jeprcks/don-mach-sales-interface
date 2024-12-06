@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Product\API;
 use App\Application\Product\RegisterProducts;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ProductAPIController extends Controller
 {
@@ -20,15 +20,28 @@ class ProductAPIController extends Controller
     public function findAll()
     {
         try {
-            $productModel = $this->registerProducts->findAll();
-            if (! $productModel) {
-                return response()->json(['message' => 'No products found.'], 404);
+            $productModels = $this->registerProducts->findAll();
+            if (empty($productModels)) {
+                return response()->json(['products' => []], 200);
             }
-            $products = array_map(fn ($productModel) => $productModel->toArray(), $productModel);
 
-            return response()->json(compact('products'), 200);
+            $products = array_map(function ($product) {
+                return [
+                    'product_id' => $product->getProduct_id(),
+                    'product_name' => $product->getProduct_name(),
+                    'product_price' => $product->getProduct_price(),
+                    'product_stock' => $product->getProduct_stock(),
+                    'description' => $product->getDescription(),
+                    'product_image' => $product->getProduct_image() ?? 'default.jpg',
+                ];
+            }, $productModels);
+
+            return response()->json(['products' => $products], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 404);
+            return response()->json([
+                'message' => 'Error fetching products',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
@@ -142,19 +155,19 @@ class ProductAPIController extends Controller
                 return $product->getId() == $id;
             });
 
-            if (!$product) {
+            if (! $product) {
                 return response()->json(['message' => 'Product not found'], 404);
             }
 
             $this->registerProducts->delete($product->getProduct_id());
 
             return response()->json([
-                'message' => 'Product deleted successfully'
+                'message' => 'Product deleted successfully',
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error deleting product',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -168,12 +181,12 @@ class ProductAPIController extends Controller
 
             return response()->json([
                 'success' => true,
-                'products' => $products
+                'products' => $products,
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }

@@ -5,6 +5,7 @@ namespace App\Infrastructure\Persistence\Eloquent\User;
 use App\Domain\Users\User;
 use App\Domain\Users\UserRepository;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 // use Exception;
 
@@ -52,5 +53,14 @@ class EloquentUserRepository implements UserRepository
                 $user->username
             );
         })->toArray();
+    }
+
+    public function userLogin($credentials)
+    {
+        if (Auth::attempt($credentials)) {
+            return redirect('home')->with('message', 'Login Successful!');
+        }
+
+        return redirect('/')->with('message', 'Login Failed!');
     }
 }

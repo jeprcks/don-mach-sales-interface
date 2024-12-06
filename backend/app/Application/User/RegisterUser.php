@@ -47,4 +47,9 @@ class RegisterUser
     {
         $this->userRepository->delete($id);
     }
+
+    public function login($credentials): void
+    {
+        $this->userRepository->userLogin($credentials);
+    }
 }

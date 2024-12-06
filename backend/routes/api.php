@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\Dashboard\API\DashboardAPIController;
 use App\Http\Controllers\Product\API\ProductAPIController;
 use App\Http\Controllers\Sales\API\SalesAPIController;
-use App\Http\Controllers\Users\API\UsersAPIController;
 use App\Http\Controllers\Transaction\API\TransactionAPIController;
+use App\Http\Controllers\Users\API\UsersAPIController;
 use Illuminate\Support\Facades\Route;
+
 
 //sales
 Route::post('/createSales', [SalesAPIController::class, 'createSales']);
@@ -25,3 +27,6 @@ Route::get('/users/{username}', [UsersAPIController::class, 'findByUsername']);
 
 //transaction
 Route::get('/transactions', [TransactionAPIController::class, 'index']);
+
+//dashboard
+Route::get('/dashboard', [DashboardAPIController::class, 'getDashboardData']);

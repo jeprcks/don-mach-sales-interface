@@ -39,12 +39,12 @@ export default function Sidebar(): JSX.Element {
 
       {/* Menu Section */}
       <ul style={styles.list}>
-        {/* <li style={styles.listItem}>
+        <li style={styles.listItem}>
           <Link href="/dashboard" style={styles.link}>
             <i style={styles.icon} className="fas fa-tachometer-alt"></i>
             {!collapsed && <span style={styles.linkText}>Dashboard</span>}
           </Link>
-        </li> */}
+        </li>
         <li style={styles.listItem}>
           <Link href="/product" style={styles.link}>
             <i style={styles.icon} className="fas fa-box"></i>
@@ -63,12 +63,6 @@ export default function Sidebar(): JSX.Element {
             {!collapsed && <span style={styles.linkText}>Transaction History</span>}
           </Link>
         </li>
-        {/* <li style={styles.listItem}>
-          <Link href="/createuser" style={styles.link}>
-            <i style={styles.icon} className="fas fa-cog"></i>
-            {!collapsed && <span style={styles.linkText}>Create User</span>}
-          </Link>
-        </li> */}
         <li style={styles.listItem}>
           <Link href="/login" style={styles.link}>
             <i style={styles.icon} className="fas fa-sign-out-alt"></i>
