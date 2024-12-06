@@ -7,6 +7,7 @@ use App\Http\Controllers\Transaction\API\TransactionAPIController;
 use App\Http\Controllers\Users\API\UsersAPIController;
 use Illuminate\Support\Facades\Route;
 
+
 //sales
 Route::post('/createSales', [SalesAPIController::class, 'createSales']);
 Route::get('/sales', [SalesAPIController::class, 'findAll']);
@@ -28,4 +29,4 @@ Route::get('/users/{username}', [UsersAPIController::class, 'findByUsername']);
 Route::get('/transactions', [TransactionAPIController::class, 'index']);
 
 //dashboard
-Route::get('/dashboard', [DashboardAPIController::class, 'index']);
+Route::get('/dashboard', [DashboardAPIController::class, 'getDashboardData']);

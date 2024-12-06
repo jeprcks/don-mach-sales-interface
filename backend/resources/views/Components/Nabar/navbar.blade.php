@@ -31,7 +31,7 @@
             </li>
 
 
-            <a class="nav-link text-white" href="/">Logout</a>
+            <a class="nav-link text-white" href="{{ route('admin.logout') }}">Logout</a>
         </ul>
     </div>
 </nav>

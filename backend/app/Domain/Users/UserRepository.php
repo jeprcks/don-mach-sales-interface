@@ -7,12 +7,14 @@ interface UserRepository
     public function create(User $user): void;
 
     public function update(User $user): void;
-    
+
     public function findByUsername(string $username): ?User;
 
     public function findAll(): array;
 
     public function delete(int $id): void;
+
+    public function userLogin($credentials);
 }
 
 // sayop na diha dapat sa eloquent ni

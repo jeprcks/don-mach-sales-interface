@@ -35,7 +35,7 @@ export default function CoffeeList() {
                 ← Back
             </button>
             <h1 style={{ ...styles.header, textAlign: 'center' as const }}>Coffee Menu</h1>
-            <div style={{ ...styles.productGrid, display: 'grid' as const, gridTemplateColumns: 'repeat(2, 1fr)' as const, gap: '20px' as const }}>
+            <div style={{ ...styles.productGrid, display: 'grid' as const, gridTemplateColumns: 'repeat(3, 1fr)' as const, gap: '20px' as const }}>
                 {products.map((product) => (
                     <div key={product.product_id} style={{ ...styles.productCard, display: 'flex' as const, flexDirection: 'column' as const, alignItems: 'center' as const }}>
                         <div style={styles.imageWrapper}>
@@ -85,7 +85,7 @@ const styles = {
     },
     productGrid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)', // Two cards per row
+        gridTemplateColumns: 'repeat(3, 1fr)', // Changed from 2 to 3 cards per row
         gap: '20px',
     },
     productCard: {
@@ -107,9 +107,9 @@ const styles = {
         borderBottom: '1px solid #ddd', // Separator line
     },
     productImage: {
-        maxWidth: '60%', // Ensures the image doesn't exceed card width
-        height: 'auto', // Maintains aspect ratio
-        objectFit: 'cover', // Crops image nicely
+        maxWidth: '75%', // Increased from 60% to 75% for slightly larger images
+        height: 'auto',
+        objectFit: 'cover',
         borderRadius: '8px',
     },
     cardContent: {

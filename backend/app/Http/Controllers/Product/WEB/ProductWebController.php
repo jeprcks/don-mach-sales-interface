@@ -22,6 +22,7 @@ class ProductWebController extends Controller
     public function index()
     {
         $products = $this->registerProducts->findAll();
+
         if (empty($products)) {
             $products = [];
         } else {
@@ -32,7 +33,7 @@ class ProductWebController extends Controller
                     'product_price' => $product->getProduct_price(),
                     'product_stock' => $product->getProduct_stock(),
                     'description' => $product->getDescription(),
-                    'product_image' => $product->getProduct_image(),
+                    'product_image' => $product->getProduct_image() ?? 'default.jpg',
                 ];
             }, $products);
         }
