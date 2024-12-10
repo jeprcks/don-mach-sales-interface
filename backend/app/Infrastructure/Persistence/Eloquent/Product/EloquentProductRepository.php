@@ -10,15 +10,17 @@ class EloquentProductRepository implements ProductRepository
     public function findAll(): array
     {
         $products = ProductModel::whereNull('deleted_at')->get();
+
         return $products->map(function ($productModel) {
             return new Product(
                 $productModel->id,
                 $productModel->product_id,
                 $productModel->product_image,
                 $productModel->product_name,
-                (float)$productModel->product_price,
+                (float) $productModel->product_price,
                 $productModel->description,
-                (int)$productModel->product_stock
+                (int) $productModel->product_stock,
+                (int) $productModel->userID
             );
         })->all();
     }
@@ -33,6 +35,7 @@ class EloquentProductRepository implements ProductRepository
         $productModel->product_price = $product->getProduct_price();
         $productModel->product_stock = $product->getProduct_stock();
         $productModel->description = $product->getDescription();
+        $productModel->userID = $product->getUserID();
         $productModel->save();
     }
 
@@ -46,6 +49,7 @@ class EloquentProductRepository implements ProductRepository
             $existingProduct->product_price = $product->getProduct_price();
             $existingProduct->product_stock = $product->getProduct_stock();
             $existingProduct->description = $product->getDescription();
+            $existingProduct->userID = $product->getUserID();
             $existingProduct->save();
         } else {
             $productModel = new ProductModel;
@@ -56,6 +60,8 @@ class EloquentProductRepository implements ProductRepository
             $productModel->product_price = $product->getproduct_price();
             $productModel->product_stock = $product->getProduct_stock();
             $productModel->description = $product->getDescription();
+            $productModel->userID = $product->getUserID();
+            $productModel->save();
         }
 
     }
@@ -75,6 +81,7 @@ class EloquentProductRepository implements ProductRepository
             $productModel->product_price,
             $productModel->product_stock,
             $productModel->description,
+            $productModel->userID
         );
     }
 
@@ -93,12 +100,34 @@ class EloquentProductRepository implements ProductRepository
             $productModel->product_price,
             $productModel->description,
             $productModel->product_stock,
+            $productModel->userID
         );
     }
 
     public function delete(string $product_id): void
     {
         ProductModel::where('product_id', $product_id)->delete();
+    }
+
+    public function findByUserID(int $userID): ?Product
+    {
+        $products = ProductModel::where('userID', $userID)->whereNull('deleted_at')->get();
+        if (! $products) {
+            return null;
+        }
+
+        return $products(function ($productModel) {
+            return new Product(
+                $productModel->id,
+                $productModel->product_id,
+                $productModel->product_image,
+                $productModel->product_name,
+                (float) $productModel->product_price,
+                $productModel->description,
+                (int) $productModel->product_stock,
+                (int) $productModel->userID
+            );
+        })->all();
     }
 
     // public function create(array $data)

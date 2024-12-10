@@ -5,8 +5,11 @@ namespace App\Domain\Sales;
 class Sales
 {
     private ?int $id;
+
     private ?string $order_list;
+
     private ?int $quantity;
+
     private ?string $total_order;
 
     public function __construct(

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('total_order');
             $table->integer('quantity');
             $table->timestamps();
+
         });
     }
 
