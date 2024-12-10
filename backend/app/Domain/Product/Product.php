@@ -21,6 +21,8 @@ class Product
 
     private ?int $product_stock;
 
+    private ?int $userID;
+
     public function __construct(
         ?int $id = null,
         ?string $product_id = null,
@@ -29,6 +31,7 @@ class Product
         ?float $product_price = null,
         ?string $description = null,
         ?int $product_stock = null,
+        ?int $userID = null,
     ) {
         $this->id = $id;
         $this->product_id = $product_id;
@@ -37,6 +40,7 @@ class Product
         $this->product_price = $product_price;
         $this->description = $description;
         $this->product_stock = $product_stock;
+        $this->userID = $userID;
     }
 
     public function toArray(): array
@@ -49,6 +53,7 @@ class Product
             'product_price' => $this->product_price,
             'description' => $this->description,
             'product_stock' => $this->product_stock,
+            'userID' => $this->userID,
         ];
     }
 
@@ -85,5 +90,10 @@ class Product
     public function getDescription()
     {
         return $this->description;
+    }
+
+    public function getUserID()
+    {
+        return $this->userID;
     }
 }

@@ -33,6 +33,7 @@ class ProductAPIController extends Controller
                     'product_stock' => $product->getProduct_stock(),
                     'description' => $product->getDescription(),
                     'product_image' => $product->getProduct_image() ?? 'default.jpg',
+                    'userID' => $product->getUserID(),
                 ];
             }, $productModels);
 
@@ -52,10 +53,10 @@ class ProductAPIController extends Controller
             'productName' => 'required|string',
             'productPrice' => 'required|numeric',
             'productStock' => 'required|numeric',
-            'productImage' => 'nullable|file|image',
+            'productImage' => 'nullable',
             'productDescription' => 'required|string',
+            'userID' => 'required|numeric',
         ]);
-
         if ($validate->fails()) {
             return response()->json($validate->errors(), 422);
         }
@@ -78,6 +79,7 @@ class ProductAPIController extends Controller
             'default.jpg',
             $data['productStock'],
             $data['productDescription'],
+            $data['userID'],
         );
 
         return response()->json(['message' => 'test']);
@@ -106,6 +108,7 @@ class ProductAPIController extends Controller
             'productStock' => 'required|numeric',
             'productImage' => 'nullable|image,',
             'productDescription' => 'required|string',
+            'userID' => 'required|numeric',
         ]);
         if ($validate->fails()) {
             return response()->json($validate->errors(), 422);
@@ -141,7 +144,8 @@ class ProductAPIController extends Controller
             $data['productPrice'],
             $data['image'],
             $data['productStock'],
-            $data['productDescription']
+            $data['productDescription'],
+            $data['userID'],
         );
 
         return response()->json(true, 200);
