@@ -109,25 +109,29 @@ class EloquentProductRepository implements ProductRepository
         ProductModel::where('product_id', $product_id)->delete();
     }
 
-    public function findByUserID(int $userID): ?Product
+    public function findByUserID(int $userID): array
     {
         $products = ProductModel::where('userID', $userID)->whereNull('deleted_at')->get();
-        if (! $products) {
-            return null;
+
+        if (count($products) === 0) {
+            return [];
+        } else {
+            // dd($products);
+
+            return $products->map(function ($productModel) {
+                return new Product(
+                    $productModel->id,
+                    $productModel->product_id,
+                    $productModel->product_image,
+                    $productModel->product_name,
+                    (float) $productModel->product_price,
+                    $productModel->description,
+                    (int) $productModel->product_stock,
+                    (int) $productModel->userID
+                );
+            })->toArray();
         }
 
-        return $products(function ($productModel) {
-            return new Product(
-                $productModel->id,
-                $productModel->product_id,
-                $productModel->product_image,
-                $productModel->product_name,
-                (float) $productModel->product_price,
-                $productModel->description,
-                (int) $productModel->product_stock,
-                (int) $productModel->userID
-            );
-        })->all();
     }
 
     // public function create(array $data)

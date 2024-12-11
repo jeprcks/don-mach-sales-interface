@@ -27,12 +27,21 @@
                 @foreach ($products as $product)
                     <div
                         style="background-color: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 100%;">
-                        <div
+                        {{-- <div
                             style="margin-bottom: 15px; height: 500px; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: #f8f8f8;">
                             <img src="{{ asset('images/' . ($product['product_image'] ?? 'default.jpg')) }}"
                                 alt="{{ $product['product_name'] }}"
                                 style="max-width: 100%; max-height: 100%; object-fit: contain; width: auto; height: auto;"
                                 onerror="this.src='{{ asset('images/default.jpg') }}'">
+                        </div> --}}
+                        <div
+                            style="margin-bottom: 15px; height: 500px; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: #f8f8f8;">
+                            <!-- Add loading="lazy" and cache control -->
+                            <img src="{{ asset('images/' . ($product['product_image'] ?? 'default.jpg')) }}"
+                                alt="{{ $product['product_name'] }}"
+                                style="max-width: 100%; max-height: 100%; object-fit: contain; width: auto; height: auto;"
+                                loading="lazy" onerror="this.src='{{ asset('images/default.jpg') }}'; this.onerror=null;"
+                                data-product-id="{{ $product['product_id'] }}">
                         </div>
                         <div style="flex-grow: 1; display: flex; flex-direction: column;">
                             <h2 style="font-size: 1.5rem; color: #4b3025; margin-bottom: 10px;">
@@ -76,7 +85,7 @@
                 </div>
             @endif
         </div>
-
+        {{-- id="edit-modal-form" --}}
         <div id="edit-modal-form" class="modal"
             style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; width: 500px; margin: auto;">
             <form action="{{ route('product.update') }}" method="POST" enctype="multipart/form-data">
@@ -86,7 +95,7 @@
                 <div class="modal-content"
                     style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
                     <h2>Edit Product</h2>
-
+                    <input type="hidden" name="user_id" value="{{ Auth::id() }}"><br>
                     <label for="edit-product-name-update">Name</label>
                     <input type="text" id="edit-product-name-update"
                         style="width: 100%; padding: 8px; margin-bottom: 10px;" name="productName">
@@ -134,12 +143,15 @@
 
                     <div id="validation-errors"
                         style="display: none; background-color: #fee2e2; border: 1px solid #ef4444; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
-                        <ul style="list-style: none; margin: 0; padding: 0;"></ul>
+                        <ul style="list-style: none; margin: 0; padding: 0;">
+
+                        </ul>
                     </div>
+                    <input type="hidden" name="user_id" value="{{ Auth::id() }}"><br>
 
                     <label for="edit-product-name">Name</label>
                     <input type="text" id="edit-product-name" style="width: 100%; padding: 8px; margin-bottom: 10px;"
-                        name="productName" required>
+                        name="product_name" required>
 
                     <label for="edit-product-description">Description</label>
                     <textarea id="edit-product-description" style="width: 100%; padding: 8px; margin-bottom: 10px; height: 100px;"
@@ -163,7 +175,7 @@
                             style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
                             Save Changes
                         </button>
-                        <button type="button" onclick="closeEditModal(event)"
+                        <button type="submit" onclick="closeEditModal(event)"
                             style="padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
                             Cancel
                         </button>
@@ -221,90 +233,90 @@
             showModal();
         }
 
-        document.getElementById('addProductForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // document.getElementById('addProductForm').addEventListener('submit', function(e) {
+        //     e.preventDefault();
 
-            const formData = new FormData(this);
-            const validationErrors = document.getElementById('validation-errors');
-            const errorList = validationErrors.querySelector('ul');
+        //     const formData = new FormData(this);
+        //     const validationErrors = document.getElementById('validation-errors');
+        //     const errorList = validationErrors.querySelector('ul');
 
-            // Clear previous errors
-            errorList.innerHTML = '';
-            validationErrors.style.display = 'none';
+        //     // Clear previous errors
+        //     errorList.innerHTML = '';
+        //     validationErrors.style.display = 'none';
 
-            fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    credentials: 'same-origin'
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.errors) {
-                        // Display validation errors
-                        Object.values(data.errors).forEach(error => {
-                            const li = document.createElement('li');
-                            li.style.color = '#dc2626';
-                            li.style.marginBottom = '5px';
-                            li.textContent = error[0];
-                            errorList.appendChild(li);
-                        });
-                        validationErrors.style.display = 'block';
-                    } else {
-                        // Close modal and refresh page on success
-                        closeEditModal();
-                        window.location.reload();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    const li = document.createElement('li');
-                    li.style.color = '#dc2626';
-                    li.textContent = 'ProductName is exist. Please try again.';
-                    errorList.appendChild(li);
-                    validationErrors.style.display = 'block';
-                });
-        });
+        //     fetch(this.action, {
+        //             method: 'POST',
+        //             body: formData,
+        //             credentials: 'same-origin'
+        //         })
+        //         .then(response => {
+        //             if (!response.ok) {
+        //                 throw new Error('Network response was not ok');
+        //             }
+        //             return response.json();
+        //         })
+        //         .then(data => {
+        //             if (data.errors) {
+        //                 // Display validation errors
+        //                 Object.values(data.errors).forEach(error => {
+        //                     const li = document.createElement('li');
+        //                     li.style.color = '#dc2626';
+        //                     li.style.marginBottom = '5px';
+        //                     li.textContent = error[0];
+        //                     errorList.appendChild(li);
+        //                 });
+        //                 validationErrors.style.display = 'block';
+        //             } else {
+        //                 // Close modal and refresh page on success
+        //                 closeEditModal();
+        //                 window.location.reload();
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('Error:', error);
+        //             const li = document.createElement('li');
+        //             li.style.color = '#dc2626';
+        //             li.textContent = 'ProductName is exist. Please try again.';
+        //             errorList.appendChild(li);
+        //             validationErrors.style.display = 'block';
+        //         });
+        // });
 
         function closeEditModalForm() {
             document.getElementById('edit-modal-form').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
         }
 
-        document.querySelector('form[action="{{ route('product.update') }}"]').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // document.querySelector('form[action="{{ route('product.update') }}"]').addEventListener('submit', function(e) {
+        //     e.preventDefault();
 
-            const formData = new FormData(this);
+        //     const formData = new FormData(this);
 
-            fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    credentials: 'same-origin'
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.errors) {
-                        // Show error message
-                        alert('Error updating product: ' + Object.values(data.errors).flat().join('\n'));
-                    } else {
-                        // Close modal and refresh page on success
-                        closeEditModalForm();
-                        window.location.reload();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while updating the product');
-                });
-        });
+        //     fetch(this.action, {
+        //             method: 'POST',
+        //             body: formData,
+        //             credentials: 'same-origin'
+        //         })
+        //         .then(response => {
+        //             if (!response.ok) {
+        //                 throw new Error('Network response was not ok');
+        //             }
+        //             return response.json();
+        //         })
+        //         .then(data => {
+        //             if (data.errors) {
+        //                 // Show error message
+        //                 alert('Error updating product: ' + Object.values(data.errors).flat().join('\n'));
+        //             } else {
+        //                 // Close modal and refresh page on success
+        //                 closeEditModalForm();
+        //                 window.location.reload();
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.error('Error:', error);
+        //             alert('An error occurred while updating the product');
+        //         });
+        // });
     </script>
 @endsection

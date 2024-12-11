@@ -59,6 +59,22 @@
                                 @enderror
                             </div>
 
+                            <div class="mb-3">
+                                <label for="user_type" class="form-label">User Type</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-user-shield"></i></span>
+                                    <select name="user_type" id="user_type"
+                                        class="form-control @error('user_type') is-invalid @enderror">
+                                        <option value="">Select User Type</option>
+                                        <option value="1">Admin</option>
+                                        <option value="2">User Admin</option>
+                                    </select>
+                                </div>
+                                @error('user_type')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
                                     <i class="fas fa-plus-circle me-2"></i>Create User
@@ -81,6 +97,7 @@
                                             <tr>
                                                 <th>Username</th>
                                                 <th>Created At</th>
+                                                <th>User Type</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -89,10 +106,12 @@
                                                 <tr>
                                                     <td>{{ $user->username }}</td>
                                                     <td>{{ $user->created_at->format('Y-m-d H:i:s') }}</td>
+                                                    <td>{{ $user->isAdmin == 1 ? 'Admin' : 'User Admin' }}</td>
                                                     <td>
                                                         <button type="button" class="btn btn-warning btn-sm edit-user"
                                                             data-id="{{ $user->id }}"
-                                                            data-username="{{ $user->username }}">
+                                                            data-username="{{ $user->username }}"
+                                                            data-user-type="{{ $user->isAdmin ? '1' : '2' }}">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
                                                         <form action="{{ route('users.destroy', $user->id) }}"
@@ -132,11 +151,13 @@
                 button.addEventListener('click', function() {
                     const id = this.dataset.id;
                     const usernameValue = this.dataset.username;
+                    const userType = this.dataset.userType;
 
                     // Update form for editing
                     form.action = `/users/${id}`;
                     userId.value = id;
                     username.value = usernameValue;
+                    document.getElementById('user_type').value = userType;
                     password.value = '';
                     password.placeholder = 'Enter new password (leave blank to keep current)';
 

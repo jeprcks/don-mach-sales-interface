@@ -37,8 +37,16 @@ class RegisterProducts
         $this->productRepository->create($data);
     }
 
-    public function update(string $product_id, string $product_name, float $product_price, string $product_image, int $product_stock, string $description)
-    {
+    public function update(
+        string $product_id,
+        string $product_name,
+        float $product_price,
+        string $product_image,
+        int $product_stock,
+        string $description,
+        int $userID
+    ) {
+
         $productModel = $this->productRepository->findByProductID($product_id);
         // dd($product_stock);
         if (! $productModel) {

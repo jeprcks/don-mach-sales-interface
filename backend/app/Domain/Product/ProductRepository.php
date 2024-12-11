@@ -16,7 +16,7 @@ interface ProductRepository
 
     public function findByProductID(string $product_id): ?Product;
 
-    public function findByUserID(int $userID): ?Product;
+    public function findByUserID(int $userID): array;
 
     // public function create(array $data): void;
 

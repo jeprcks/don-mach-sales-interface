@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Product\WEB;
 
 use App\Application\Product\RegisterProducts;
 use App\Http\Controllers\Controller;
+use App\Infrastructure\Persistence\Eloquent\Product\ProductModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use App\Infrastructure\Persistence\Eloquent\Product\ProductModel;
 
 class ProductWebController extends Controller
 {
@@ -19,9 +19,11 @@ class ProductWebController extends Controller
         $this->registerProducts = $registerProducts;
     }
 
-    public function index()
+    public function index($user_id)
     {
-        $products = $this->registerProducts->findAll();
+        // dd($user_id);
+        $products = $this->registerProducts->findByUserID($user_id);
+        // dd($products);
 
         if (empty($products)) {
             $products = [];
@@ -36,6 +38,7 @@ class ProductWebController extends Controller
                     'product_image' => $product->getProduct_image() ?? 'default.jpg',
                 ];
             }, $products);
+            // dd($products);
         }
 
         return view('Pages.Product.index', compact('products'));
@@ -60,11 +63,8 @@ class ProductWebController extends Controller
     public function createProducts(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'productName' => [
-                'required',
-                'string',
-                Rule::unique('product', 'product_name'),
-            ],
+            'user_id' => 'required|integer',
+            'product_name' => 'required|string|unique:product',
             'productPrice' => 'required|numeric|min:0',
             'productStock' => 'required|integer|min:0',
             'productImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -87,14 +87,16 @@ class ProductWebController extends Controller
 
             $this->registerProducts->create(
                 $productId,
-                $request->productName,
+                $request->product_name,
                 (float) $request->productPrice,
                 $imageName,
                 (int) $request->productStock,
-                $request->productDescription
+                $request->productDescription,
+                $request->user_id,
             );
 
-            return response()->json(['success' => true]);
+            // return response()->json(['success' => true]);
+            return redirect()->route('product.index');
         } catch (\Exception $e) {
             return response()->json(['errors' => ['general' => [$e->getMessage()]]], 500);
         }
@@ -116,7 +118,9 @@ class ProductWebController extends Controller
 
     public function updateProduct(Request $request)
     {
+        // dd($request->all());
         $validate = Validator::make($request->all(), [
+            'user_id' => 'required|integer',
             'productID' => 'required|string',
             'productName' => [
                 'required',
@@ -135,6 +139,7 @@ class ProductWebController extends Controller
         ]);
 
         if ($validate->fails()) {
+
             return response()->json(['errors' => $validate->errors()], 422);
         }
 
@@ -164,10 +169,12 @@ class ProductWebController extends Controller
                 (float) $data['productPrice'],
                 $data['image'],
                 (int) $data['productStock'],
-                $data['productDescription']
+                $data['productDescription'],
+                $data['user_id'],
             );
 
-            return response()->json(['success' => true]);
+            return redirect()->route('product.index');
+            // return response()->json(['success' => true]);
         } catch (\Exception $e) {
             return response()->json(['errors' => ['general' => [$e->getMessage()]]], 500);
         }
@@ -178,9 +185,11 @@ class ProductWebController extends Controller
         $product = ProductModel::where('product_id', $id)->first();
         if ($product) {
             $product->delete(); // This will now soft delete
+
             return redirect()->route('product.index')
                 ->with('success', 'Product moved to archive successfully');
         }
+
         return redirect()->route('product.index')
             ->with('error', 'Product not found');
     }

@@ -15,7 +15,9 @@
                 <a class="nav-link text-white" href="/dashboard">Dashboard</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="/products">Products</a>
+                <a class="nav-link text-white"
+                    href="{{ route('product.index', ['user_id' => auth()->user()->id]) }}">Products</a>
+                {{-- <a class="nav-link text-white" href="/products/{{ Auth::id() }}/{{ Auth::user()->isAdmin }}">Products</a> --}}
             </li>
             <li class="nav-item">
                 <a class="nav-link text-white" href="/sales">Sales</a>
