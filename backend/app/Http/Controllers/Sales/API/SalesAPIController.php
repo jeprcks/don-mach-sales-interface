@@ -44,6 +44,7 @@ class SalesAPIController extends Controller
             $sale->order_list = json_encode($request->order_list);
             $sale->total_order = $request->total_order;
             $sale->quantity = $request->quantity;
+            $sale->user_id = $request->user_id;
             $sale->save();
 
             // Update product stock

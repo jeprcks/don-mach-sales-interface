@@ -9,10 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminAuthController extends Controller
 {
-    private const ADMIN_USERNAME = 'admin';
-
-    private const ADMIN_PASSWORD = 'admin';
-
     private RegisterUser $registerUser;
 
     public function __construct(RegisterUser $registerUser)

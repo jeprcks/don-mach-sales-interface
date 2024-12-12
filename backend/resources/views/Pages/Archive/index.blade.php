@@ -11,6 +11,7 @@
         </h1>
 
         <div id="product-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; padding: 20px;">
+
             @if (count($archivedProducts) > 0)
                 @foreach ($archivedProducts as $product)
                     <div
@@ -41,7 +42,7 @@
         </div>
 
         <div style="text-align: center; margin-top: 20px;">
-            <a href="{{ route('product.index') }}"
+            <a href="{{ route('product.index', ['user_id' => $userId]) }}"
                 style="display: inline-block; padding: 10px 20px; background-color: #4b3025; color: white; text-decoration: none; border-radius: 8px;">
                 Back to Products
             </a>

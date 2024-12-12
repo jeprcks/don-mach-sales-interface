@@ -16,6 +16,7 @@ class EloquentUserRepository implements UserRepository
         $data = new UserModel;
         $data->username = $user->getUsername();
         $data->password = $user->getPassword();
+        $data->isAdmin = $user->getIsAdmin();
         $data->save();
     }
 

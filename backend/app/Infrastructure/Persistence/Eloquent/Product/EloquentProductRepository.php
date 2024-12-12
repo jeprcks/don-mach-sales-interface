@@ -134,6 +134,25 @@ class EloquentProductRepository implements ProductRepository
 
     }
 
+    public function findByProductNameAndUserID(string $product_name, int $userID): ?Product
+    {
+        $productModel = ProductModel::where('product_name', $product_name)->where('userID', $userID)->first();
+        if (! $productModel) {
+            return null;
+        }
+
+        return new Product(
+            null,
+            $productModel->product_id,
+            $productModel->product_image,
+            $productModel->product_name,
+            $productModel->product_price,
+            $productModel->description,
+            $productModel->product_stock,
+            $productModel->userID
+        );
+    }
+
     // public function create(array $data)
     // {
     //     return ProductModel::create($data);

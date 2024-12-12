@@ -10,14 +10,18 @@ class User
 
     private string $password;
 
+    private bool $isAdmin;
+
     public function __construct(
         ?int $id = null,
         ?string $username = null,
-        ?string $password = null
+        ?string $password = null,
+        ?bool $isAdmin = null
     ) {
         $this->id = $id ?? 0;
         $this->username = $username ?? '';
         $this->password = $password ?? '';
+        $this->isAdmin = $isAdmin ?? false;
     }
 
     public function getID(): ?int
@@ -33,5 +37,10 @@ class User
     public function getPassword(): string
     {
         return $this->password;
+    }
+
+    public function getIsAdmin(): bool
+    {
+        return $this->isAdmin;
     }
 }

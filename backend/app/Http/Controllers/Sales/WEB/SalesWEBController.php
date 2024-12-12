@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Infrastructure\Persistence\Eloquent\Sales\SalesModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class SalesWEBController extends Controller
 {
     public function index()
     {
         $products = DB::table('product')
+            ->where('userID', Auth::id())
             ->whereNull('deleted_at')
             ->select('product_id', 'product_name', 'product_price', 'product_stock', 'product_image', 'description')
             ->get();
@@ -31,6 +33,7 @@ class SalesWEBController extends Controller
             foreach ($orders as $order) {
                 $product = DB::table('product')
                     ->where('product_name', $order['name'])
+                    ->where('userID', Auth::id())
                     ->first();
 
                 if ($product) {
@@ -47,6 +50,7 @@ class SalesWEBController extends Controller
 
                     DB::table('product')
                         ->where('product_name', $order['name'])
+                        ->where('userID', Auth::id())
                         ->update(['product_stock' => $newStock]);
 
                     $totalQuantity += $order['quantity'];
@@ -54,11 +58,12 @@ class SalesWEBController extends Controller
                 }
             }
 
-            // Create transaction record
+            // Create transaction record with userID
             $sale = new SalesModel;
             $sale->order_list = json_encode($orders);
             $sale->total_order = $totalOrder;
             $sale->quantity = $totalQuantity;
+            $sale->user_id = Auth::id();
             $sale->save();
 
             DB::commit();

@@ -13,11 +13,17 @@ class EloquentSalesRepository implements SalesRepository
         $saleModel->order_list = $sales->getOrder_list();
         $saleModel->total_order = $sales->getTotal_order();
         $saleModel->quantity = $sales->getQuantity();
+        $saleModel->user_id = $sales->getUser_id();
         $saleModel->save();
     }
 
     public function findAll(): array
     {
         return SalesModel::all()->toArray();
+    }
+
+    public function findByUserID(int $user_id): array
+    {
+        return SalesModel::where('user_id', $user_id)->get()->toArray();
     }
 }

@@ -11,12 +11,12 @@ class Transaction extends Model
         'order_list',
         'total_amount',
         'quantity',
-        'transaction_date'
+        'transaction_date',
     ];
 
     protected $casts = [
         'order_list' => 'array',
-        'transaction_date' => 'datetime'
+        'transaction_date' => 'datetime',
     ];
 
     public function user()

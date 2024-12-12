@@ -80,9 +80,13 @@ class RegisterProducts
         return $this->productRepository->delete($product_id);
     }
 
-    public function findByUserID(int $userID)
+    public function findByUserID(int $userID): array
     {
         return $this->productRepository->findByUserID($userID);
+    }
+    public function findByProductNameAndUserID(string $product_name, int $userID): ?Product
+    {
+        return $this->productRepository->findByProductNameAndUserID($product_name, $userID);
     }
 }
 
