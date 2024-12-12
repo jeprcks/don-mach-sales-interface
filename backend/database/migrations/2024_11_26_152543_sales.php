@@ -16,7 +16,9 @@ return new class extends Migration
             $table->json('order_list');
             $table->integer('total_order');
             $table->integer('quantity');
+            $table->integer('user_id');
             $table->timestamps();
+
         });
     }
 

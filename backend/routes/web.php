@@ -25,7 +25,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard', [DashboardWEBController::class, 'index'])->name('dashboard');
 
     // Products
-    Route::get('/products', [ProductWebController::class, 'index'])->name('product.index');
+
+    Route::get('/products/archive', [ProductWebController::class, 'archive'])->name('product.archive');
+    // Route::get('/products/{user_id}/{isAdmin}', [ProductWebController::class, 'index'])->name('product.index');
+    Route::get('/products/{user_id}', [ProductWebController::class, 'index'])->name('product.index');
     Route::post('/products/update', [ProductWebController::class, 'updateProduct'])->name('product.update');
     Route::post('/products/create', [ProductWebController::class, 'createProducts'])->name('product.create');
     Route::post('/deleteitem/{id}', [ProductWebController::class, 'deleteitem'])->name('deleteitem');
@@ -44,7 +47,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/update-stock', [SalesWEBController::class, 'updateStock'])->name('sales.updateStock');
 
     // Transactions
-    Route::get('/transaction', [TransactionWEBController::class, 'index']);
+    Route::get('/transaction/{user_id}', [TransactionWEBController::class, 'index']);
 
     // Logout
     Route::get('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');

@@ -7,11 +7,10 @@ use App\Http\Controllers\Transaction\API\TransactionAPIController;
 use App\Http\Controllers\Users\API\UsersAPIController;
 use Illuminate\Support\Facades\Route;
 
-
 //sales
 Route::post('/createSales', [SalesAPIController::class, 'createSales']);
 Route::get('/sales', [SalesAPIController::class, 'findAll']);
-
+Route::get('/sales/{userID}', [SalesAPIController::class, 'findByUserID']);
 //product
 Route::get('/products', [ProductAPIController::class, 'findAll']);
 Route::post('/add/products', [ProductAPIController::class, 'createProducts']);

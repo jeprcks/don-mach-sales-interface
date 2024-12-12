@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/product_bloc.dart';
 import '../../bloc/product_event.dart';
 import '../../bloc/product_state.dart';
-import '../../models/productmodel.dart';
 
 class ProductPage extends StatelessWidget {
   const ProductPage({super.key});
@@ -73,15 +72,14 @@ class ProductPage extends StatelessWidget {
                             children: [
                               Text(
                                 product.name,
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 4.0),
                               Text(
                                 '₱${product.price.toStringAsFixed(2)}',
                                 style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold
-                                ),
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 4.0),
                               Text(
@@ -92,7 +90,8 @@ class ProductPage extends StatelessWidget {
                               const SizedBox(height: 4.0),
                               Text(
                                 'Stock: ${product.stock}',
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),

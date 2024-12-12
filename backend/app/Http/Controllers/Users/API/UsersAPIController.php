@@ -21,9 +21,10 @@ class UsersAPIController extends Controller
     public function findAll()
     {
         $users = UserModel::all(['id', 'username', 'created_at', 'updated_at']);
+
         return response()->json([
             'users' => $users,
-            'message' => 'Users retrieved successfully'
+            'message' => 'Users retrieved successfully',
         ]);
     }
 
@@ -99,6 +100,31 @@ class UsersAPIController extends Controller
             return response()->json([
                 'message' => 'Error deleting user',
                 'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function findByUsername($username)
+    {
+        try {
+            $user = UserModel::where('username', $username)->first();
+
+            if (! $user) {
+                return response()->json([
+                    'message' => 'User not found',
+                ], 404);
+            }
+
+            return response()->json([
+                'user' => [
+                    'id' => $user->id,
+                    'username' => $user->username,
+                ],
+                'message' => 'User found successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error finding user',
             ], 500);
         }
     }

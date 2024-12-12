@@ -8,28 +8,18 @@ use Illuminate\Http\Request;
 
 class TransactionAPIController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $transactions = SalesModel::orderBy('created_at', 'desc')
-                ->get()
-                ->map(function ($transaction) {
-                    $orderList = json_decode($transaction->order_list, true);
+            $userId = $request->query('user_id');
 
-                    return [
-                        'orderId' => $transaction->id,
-                        'date' => $transaction->created_at,
-                        'items' => array_map(function ($item) {
-                            return [
-                                'name' => $item['name'],
-                                'quantity' => $item['quantity'],
-                                'price' => (float) $item['price'],
-                                'total' => (float) $item['price'] * $item['quantity']
-                            ];
-                        }, $orderList),
-                        'total' => (float) $transaction->total_order
-                    ];
-                });
+            $query = SalesModel::orderBy('created_at', 'desc');
+
+            if ($userId) {
+                $query->where('user_id', $userId);
+            }
+
+            $transactions = $query->get();
 
             return response()->json($transactions);
         } catch (\Exception $e) {

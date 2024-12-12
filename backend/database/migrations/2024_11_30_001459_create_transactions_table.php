@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->timestamp('transaction_date');
             $table->timestamps();
+            $table->integer('user_id');
         });
     }
 

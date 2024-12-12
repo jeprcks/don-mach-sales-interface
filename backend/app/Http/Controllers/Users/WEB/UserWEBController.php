@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Users\WEB;
 
+use App\Application\User\RegisterUser;
 use App\Http\Controllers\Controller;
 use App\Infrastructure\Persistence\Eloquent\User\UserModel;
-use App\Application\User\RegisterUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,6 +20,7 @@ class UserWEBController extends Controller
     public function index()
     {
         $users = UserModel::all();
+
         return view('Pages.CreateUser.index', compact('users'));
     }
 
@@ -28,18 +29,26 @@ class UserWEBController extends Controller
         $validated = $request->validate([
             'username' => 'required|string|unique:users,username',
             'password' => 'required|string|min:6',
+            'user_type' => 'required|string',
         ]);
+
+        if ($request->user_type == '1') {
+            $isAdmin = true;
+        } else {
+            $isAdmin = false;
+        }
 
         try {
             $this->registerUser->create(
                 $validated['username'],
-                Hash::make($validated['password'])
+                Hash::make($validated['password']),
+                $isAdmin,
             );
 
             return redirect()->back()->with('success', 'User created successfully');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error creating user: ' . $e->getMessage())
+                ->with('error', 'Error creating user: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -48,14 +57,16 @@ class UserWEBController extends Controller
     {
         try {
             $this->registerUser->delete($id);
+
             return redirect()->back()->with('success', 'User deleted successfully');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Error deleting user: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error deleting user: '.$e->getMessage());
         }
     }
 
     public function update(Request $request, $id)
     {
+
         $validated = $request->validate([
             'username' => 'required|string|unique:users,username,'.$id,
             'password' => 'nullable|string|min:6',
@@ -64,7 +75,7 @@ class UserWEBController extends Controller
         try {
             $user = UserModel::findOrFail($id);
             $user->username = $validated['username'];
-            if (!empty($validated['password'])) {
+            if (! empty($validated['password'])) {
                 $user->password = Hash::make($validated['password']);
             }
             $user->save();
@@ -72,7 +83,7 @@ class UserWEBController extends Controller
             return redirect()->back()->with('success', 'User updated successfully');
         } catch (\Exception $e) {
             return redirect()->back()
-                ->with('error', 'Error updating user: ' . $e->getMessage())
+                ->with('error', 'Error updating user: '.$e->getMessage())
                 ->withInput();
         }
     }

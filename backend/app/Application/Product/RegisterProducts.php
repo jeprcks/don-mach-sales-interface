@@ -21,6 +21,7 @@ class RegisterProducts
         string $product_image,
         string $product_stock,
         string $description,
+        int $userID,
     ): void {
         // dd($product_price);
         $data = new Product(
@@ -31,12 +32,21 @@ class RegisterProducts
             $product_price,
             $description,
             $product_stock,
+            $userID,
         );
         $this->productRepository->create($data);
     }
 
-    public function update(string $product_id, string $product_name, float $product_price, string $product_image, int $product_stock, string $description)
-    {
+    public function update(
+        string $product_id,
+        string $product_name,
+        float $product_price,
+        string $product_image,
+        int $product_stock,
+        string $description,
+        int $userID
+    ) {
+
         $productModel = $this->productRepository->findByProductID($product_id);
         // dd($product_stock);
         if (! $productModel) {
@@ -50,6 +60,7 @@ class RegisterProducts
             $product_price,
             $description,
             $product_stock,
+            $userID,
         );
         $this->productRepository->update($data);
     }
@@ -67,6 +78,15 @@ class RegisterProducts
     public function delete(string $product_id)
     {
         return $this->productRepository->delete($product_id);
+    }
+
+    public function findByUserID(int $userID): array
+    {
+        return $this->productRepository->findByUserID($userID);
+    }
+    public function findByProductNameAndUserID(string $product_name, int $userID): ?Product
+    {
+        return $this->productRepository->findByProductNameAndUserID($product_name, $userID);
     }
 }
 
