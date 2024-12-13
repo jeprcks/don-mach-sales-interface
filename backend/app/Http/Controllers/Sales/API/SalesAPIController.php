@@ -82,4 +82,39 @@ class SalesAPIController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function findByUserID($userID)
+    {
+        $sales = $this->registerSales->findByUserID($userID);
+
+        return response()->json($sales);
+    }
+
+    public function getProducts($userId)
+    {
+        try {
+            // Get all available products
+            $products = DB::table('product')
+                ->where('user_id', $userId)
+                ->where('product_stock', '>', 0)
+                ->select(
+                    'product_id',
+                    'product_name',
+                    'product_price',
+                    'product_stock',
+                    'product_image'
+                )
+                ->get();
+
+            return response()->json([
+                'products' => $products,
+                'message' => 'Products retrieved successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error retrieving products',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

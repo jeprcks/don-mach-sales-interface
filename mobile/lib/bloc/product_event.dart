@@ -55,4 +55,3 @@ class DecrementStock extends ProductEvent {
   @override
   List<Object?> get props => [product];
 }
-

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Product\API;
 
 use App\Application\Product\RegisterProducts;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -154,6 +155,7 @@ class ProductAPIController extends Controller
     public function destroy($id)
     {
         try {
+            $userId = auth()->id();
             $products = $this->registerProducts->findAll();
             $product = collect($products)->first(function ($product) use ($id) {
                 return $product->getId() == $id;
@@ -163,14 +165,18 @@ class ProductAPIController extends Controller
                 return response()->json(['message' => 'Product not found'], 404);
             }
 
+            if ($product->getUserID() !== $userId) {
+                return response()->json(['message' => 'Unauthorized to delete this product'], 403);
+            }
+
             $this->registerProducts->delete($product->getProduct_id());
 
             return response()->json([
-                'message' => 'Product deleted successfully',
+                'message' => 'Product archived successfully',
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Error deleting product',
+                'message' => 'Error archiving product',
                 'error' => $e->getMessage(),
             ], 500);
         }
@@ -193,5 +199,77 @@ class ProductAPIController extends Controller
                 'message' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    // public function findByUserID($user_id): JsonResponse
+    // {
+    //     try {
+    //         $products = $this->registerProducts->findByUserID((int) $user_id);
+
+    //         return response()->json($products);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
+    public function findByUserID($user_id): JsonResponse
+    {
+        $products = $this->registerProducts->findByUserID((int) $user_id);
+
+        if (empty($products)) {
+            $products = [];
+        } else {
+            $products = array_map(function ($product) {
+                return [
+                    'product_id' => $product->getProduct_id(),
+                    'product_name' => $product->getProduct_name(),
+                    'product_price' => $product->getProduct_price(),
+                    'product_stock' => $product->getProduct_stock(),
+                    'description' => $product->getDescription(),
+                    'product_image' => $product->getProduct_image() ?? 'default.jpg',
+                ];
+            }, $products);
+        }
+
+        return response()->json($products);
+        //     try {
+        //         // Get the authenticated user from the request
+        //         $authenticatedUser = request()->user;
+
+        //         // Check if the user is trying to access their own products
+        //         if ($authenticatedUser->id != $user_id) {
+        //             return response()->json([
+        //                 'message' => 'Unauthorized access',
+        //             ], 403);
+        //         }
+
+        //         $products = $this->registerProducts->findByUserID((int) $user_id);
+
+        //         if (empty($products)) {
+        //             return response()->json(['products' => []], 200);
+        //         }
+
+        //         $formattedProducts = array_map(function ($product) {
+        //             return [
+        //                 'product_id' => $product->getProduct_id(),
+        //                 'product_name' => $product->getProduct_name(),
+        //                 'description' => $product->getDescription(),
+        //                 'product_price' => $product->getProduct_price(),
+        //                 'product_stock' => $product->getProduct_stock(),
+        //                 'product_image' => $product->getProduct_image(),
+        //                 'userID' => $product->getUserID(),
+        //             ];
+        //         }, $products);
+
+        //         return response()->json(['products' => $formattedProducts], 200);
+        //     } catch (\Exception $e) {
+        //         return response()->json([
+        //             'message' => 'Error fetching products',
+        //             'error' => $e->getMessage(),
+        //         ], 500);
+        //     }
     }
 }

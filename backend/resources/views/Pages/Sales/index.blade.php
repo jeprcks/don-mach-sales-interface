@@ -189,10 +189,6 @@
                         </style>
                     </head>
                     <body>
-                        <div class="receipt-header">
-                            <h2>Cafe Amadeo</h2>
-                            <p>Transaction Receipt</p>
-                        </div>
                         ${receiptContent}
                     </body>
                 </html>
@@ -238,7 +234,6 @@
                                 <h4>Don Macchiatos</h4>
                                 <p class="text-muted">Fuel your day, one cup at a time</p>
                                 <div class="receipt-details">
-                                    <p><strong>Order #${data.transaction_id}</strong></p>
                                     <p>${getCurrentDate()}</p>
                                 </div>
                             </div>
