@@ -109,25 +109,48 @@ class EloquentProductRepository implements ProductRepository
         ProductModel::where('product_id', $product_id)->delete();
     }
 
-    public function findByUserID(int $userID): ?Product
+    public function findByUserID(int $userID): array
     {
         $products = ProductModel::where('userID', $userID)->whereNull('deleted_at')->get();
-        if (! $products) {
+
+        if (count($products) === 0) {
+            return [];
+        } else {
+            // dd($products);
+
+            return $products->map(function ($productModel) {
+                return new Product(
+                    $productModel->id,
+                    $productModel->product_id,
+                    $productModel->product_image,
+                    $productModel->product_name,
+                    (float) $productModel->product_price,
+                    $productModel->description,
+                    (int) $productModel->product_stock,
+                    (int) $productModel->userID
+                );
+            })->toArray();
+        }
+
+    }
+
+    public function findByProductNameAndUserID(string $product_name, int $userID): ?Product
+    {
+        $productModel = ProductModel::where('product_name', $product_name)->where('userID', $userID)->first();
+        if (! $productModel) {
             return null;
         }
 
-        return $products(function ($productModel) {
-            return new Product(
-                $productModel->id,
-                $productModel->product_id,
-                $productModel->product_image,
-                $productModel->product_name,
-                (float) $productModel->product_price,
-                $productModel->description,
-                (int) $productModel->product_stock,
-                (int) $productModel->userID
-            );
-        })->all();
+        return new Product(
+            null,
+            $productModel->product_id,
+            $productModel->product_image,
+            $productModel->product_name,
+            $productModel->product_price,
+            $productModel->description,
+            $productModel->product_stock,
+            $productModel->userID
+        );
     }
 
     // public function create(array $data)

@@ -9,7 +9,7 @@ export function useTransactions() {
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/transactions');
+                const response = await fetch('http://localhost:8000/api/sales/{userID}');
                 if (!response.ok) {
                     throw new Error('Failed to fetch transactions');
                 }

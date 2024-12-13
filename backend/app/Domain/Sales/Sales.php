@@ -12,16 +12,20 @@ class Sales
 
     private ?string $total_order;
 
+    private ?int $user_id;
+
     public function __construct(
         ?int $id = null,
         ?string $order_list = null,
         ?int $quantity = null,
-        ?string $total_order = null
+        ?string $total_order = null,
+        ?int $user_id = null
     ) {
         $this->id = $id;
         $this->order_list = $order_list;
         $this->quantity = $quantity;
         $this->total_order = $total_order;
+        $this->user_id = $user_id;
     }
 
     public function getID()
@@ -42,5 +46,10 @@ class Sales
     public function getTotal_order()
     {
         return $this->total_order;
+    }
+
+    public function getUser_id()
+    {
+        return $this->user_id;
     }
 }

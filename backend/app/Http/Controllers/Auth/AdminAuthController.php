@@ -9,10 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminAuthController extends Controller
 {
-    private const ADMIN_USERNAME = 'admin';
-
-    private const ADMIN_PASSWORD = 'admin';
-
     private RegisterUser $registerUser;
 
     public function __construct(RegisterUser $registerUser)
@@ -39,26 +35,16 @@ class AdminAuthController extends Controller
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
             return redirect('home')->with('message', 'Login Successful!');
         }
 
-        return redirect('/')->with('message', 'Login Failed!');
-        // $data = $request->all();
-        // $this->registerUser->login($data['username'], $data['password']);
-        // dd($credentials);
-
-        // if ($credentials['username'] === self::ADMIN_USERNAME &&
-        //     $credentials['password'] === self::ADMIN_PASSWORD) {
-
-        //     session(['is_admin' => true]);
-        //     session(['username' => 'admin']);
-
-        //     return redirect()->route('home');
-        // }
-
-        // return back()->withErrors([
-        //     'username' => 'Invalid admin credentials.',
-        // ])->withInput($request->except('password'));
+        return back()
+            ->withErrors([
+                'username' => 'Wrong username or password.',
+            ])
+            ->withInput($request->except('password'));
     }
 
     public function logout(Request $request)

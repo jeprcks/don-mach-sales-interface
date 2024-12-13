@@ -3,65 +3,43 @@
 namespace App\Http\Controllers\Dashboard\WEB;
 
 use App\Http\Controllers\Controller;
-use App\Infrastructure\Persistence\Eloquent\Sales\SalesModel;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DashboardWEBController extends Controller
 {
     public function index()
     {
-        $today = Carbon::today();
+        $userId = Auth::id();
 
-        // Daily Sales (today)
-        $dailySales = SalesModel::select(
-            DB::raw('DATE(created_at) as date'),
-            DB::raw('SUM(total_order) as total_sales'),
-            DB::raw('COUNT(*) as transaction_count')
-        )
-            ->whereDate('created_at', $today)
+        $dailySales = DB::table('sales')
+            ->where('user_id', $userId)
+            ->whereDate('created_at', today())
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(total_order) as total_sales'))
             ->groupBy('date')
             ->get();
 
-        // Weekly Sales (last 7 days including today)
-        $weeklySales = SalesModel::select(
-            DB::raw('DATE(created_at) as date'),
-            DB::raw('SUM(total_order) as total_sales'),
-            DB::raw('COUNT(*) as transaction_count')
-        )
-            ->whereBetween('created_at', [
-                $today->copy()->subDays(6)->startOfDay(),
-                $today->copy()->endOfDay(),
-            ])
+        $weeklySales = DB::table('sales')
+            ->where('user_id', $userId)
+            ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(total_order) as total_sales'))
             ->groupBy('date')
             ->get();
 
-        // Monthly Sales (current month)
-        $monthlySales = SalesModel::select(
-            DB::raw('DATE(created_at) as date'),
-            DB::raw('SUM(total_order) as total_sales'),
-            DB::raw('COUNT(*) as transaction_count')
-        )
-            ->whereYear('created_at', $today->year)
-            ->whereMonth('created_at', $today->month)
+        $monthlySales = DB::table('sales')
+            ->where('user_id', $userId)
+            ->whereMonth('created_at', now()->month)
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(total_order) as total_sales'))
             ->groupBy('date')
             ->get();
 
-        // Yearly Sales (current year)
-        $yearlySales = SalesModel::select(
-            DB::raw('DATE(created_at) as date'),
-            DB::raw('SUM(total_order) as total_sales'),
-            DB::raw('COUNT(*) as transaction_count')
-        )
-            ->whereYear('created_at', $today->year)
+        $yearlySales = DB::table('sales')
+            ->where('user_id', $userId)
+            ->whereYear('created_at', now()->year)
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(total_order) as total_sales'))
             ->groupBy('date')
             ->get();
 
-        return view('Pages.Dashboard.index', compact(
-            'dailySales',
-            'weeklySales',
-            'monthlySales',
-            'yearlySales'
-        ));
+        return view('Pages.Dashboard.index', compact('dailySales', 'weeklySales', 'monthlySales', 'yearlySales'));
     }
 }

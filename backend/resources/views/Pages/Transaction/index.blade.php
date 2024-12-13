@@ -25,7 +25,6 @@
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <div>
                                         <h5 class="mb-1">
-                                            Order #{{ $transaction->id }}
                                             <span class="badge bg-success ms-2">Completed</span>
                                         </h5>
                                         <p class="text-muted mb-0">

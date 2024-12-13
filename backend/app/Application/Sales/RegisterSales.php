@@ -23,4 +23,9 @@ class RegisterSales
     {
         return $this->salesRepository->findAll();
     }
+
+    public function findByUserID(int $user_id): array
+    {
+        return $this->salesRepository->findByUserID($user_id);
+    }
 }

@@ -75,6 +75,7 @@
                         <div class="stat-details">
                             <h6>Yearly Sales</h6>
                             <h3>₱{{ number_format($yearlySales->sum('total_sales'), 2) }}</h3>
+
                             <p class="trend">
                                 <i class="fas fa-arrow-up text-success"></i>
                                 <span>vs. last year</span>

@@ -16,6 +16,7 @@ class EloquentUserRepository implements UserRepository
         $data = new UserModel;
         $data->username = $user->getUsername();
         $data->password = $user->getPassword();
+        $data->isAdmin = $user->getIsAdmin();
         $data->save();
     }
 
@@ -57,10 +58,23 @@ class EloquentUserRepository implements UserRepository
 
     public function userLogin($credentials)
     {
-        if (Auth::attempt($credentials)) {
-            return redirect('home')->with('message', 'Login Successful!');
+        // dd($credentials);
+        // if (Auth::attempt($credentials)) {
+        //     return redirect('home')->with('message', 'Login Successful!');
+        // }
+
+        // return redirect('/')->with('message', 'Login Failed!');
+        if (! Auth::attempt($credentials)) {
+            throw new \Exception('Invalid credentials');
         }
 
-        return redirect('/')->with('message', 'Login Failed!');
+        $user = Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return [
+            'user' => $user,
+            'token' => $token,
+            'token_type' => 'Bearer',
+        ];
     }
 }

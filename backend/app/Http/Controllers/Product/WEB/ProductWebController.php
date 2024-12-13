@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Product\WEB;
 
 use App\Application\Product\RegisterProducts;
 use App\Http\Controllers\Controller;
+use App\Infrastructure\Persistence\Eloquent\Product\ProductModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use App\Infrastructure\Persistence\Eloquent\Product\ProductModel;
 
 class ProductWebController extends Controller
 {
@@ -19,9 +19,9 @@ class ProductWebController extends Controller
         $this->registerProducts = $registerProducts;
     }
 
-    public function index()
+    public function index($user_id)
     {
-        $products = $this->registerProducts->findAll();
+        $products = $this->registerProducts->findByUserID((int) $user_id);
 
         if (empty($products)) {
             $products = [];
@@ -60,11 +60,8 @@ class ProductWebController extends Controller
     public function createProducts(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'productName' => [
-                'required',
-                'string',
-                Rule::unique('product', 'product_name'),
-            ],
+            'user_id' => 'required|integer',
+            'product_name' => 'required|string',
             'productPrice' => 'required|numeric|min:0',
             'productStock' => 'required|integer|min:0',
             'productImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -72,9 +69,16 @@ class ProductWebController extends Controller
         ]);
 
         if ($validate->fails()) {
-            return response()->json(['errors' => $validate->errors()], 422);
-        }
 
+            return redirect()->route('product.index', ['user_id' => $request->user_id])
+                ->with('error', $validate->errors()->first());
+
+        }
+        $validateProductName = $this->registerProducts->findByProductNameAndUserID($request->product_name, $request->user_id);
+        if ($validateProductName) {
+            return redirect()->route('product.index', ['user_id' => $request->user_id])
+                ->with('error', 'Product name is taken');
+        }
         try {
             $productId = $this->generateProductId();
             $imageName = 'default.jpg';
@@ -87,14 +91,15 @@ class ProductWebController extends Controller
 
             $this->registerProducts->create(
                 $productId,
-                $request->productName,
+                $request->product_name,
                 (float) $request->productPrice,
                 $imageName,
                 (int) $request->productStock,
-                $request->productDescription
+                $request->productDescription,
+                $request->user_id,
             );
 
-            return response()->json(['success' => true]);
+            return redirect()->route('product.index', ['user_id' => $request->user_id]);
         } catch (\Exception $e) {
             return response()->json(['errors' => ['general' => [$e->getMessage()]]], 500);
         }
@@ -117,11 +122,17 @@ class ProductWebController extends Controller
     public function updateProduct(Request $request)
     {
         $validate = Validator::make($request->all(), [
+            'user_id' => 'required|integer',
             'productID' => 'required|string',
             'productName' => [
                 'required',
                 'string',
-                Rule::unique('product', 'product_name')->ignore($request->productID, 'product_id'),
+                Rule::unique('product', 'product_name')
+                    ->where(function ($query) use ($request) {
+                        return $query->where('userID', $request->user_id)
+                            ->whereNull('deleted_at');
+                    })
+                    ->ignore($request->productID, 'product_id'),
             ],
             'productPrice' => 'required|numeric',
             'productStock' => 'required|numeric',
@@ -135,6 +146,7 @@ class ProductWebController extends Controller
         ]);
 
         if ($validate->fails()) {
+
             return response()->json(['errors' => $validate->errors()], 422);
         }
 
@@ -164,10 +176,11 @@ class ProductWebController extends Controller
                 (float) $data['productPrice'],
                 $data['image'],
                 (int) $data['productStock'],
-                $data['productDescription']
+                $data['productDescription'],
+                $data['user_id'],
             );
 
-            return response()->json(['success' => true]);
+            return redirect()->route('product.index', ['user_id' => $data['user_id']]);
         } catch (\Exception $e) {
             return response()->json(['errors' => ['general' => [$e->getMessage()]]], 500);
         }
@@ -175,14 +188,35 @@ class ProductWebController extends Controller
 
     public function deleteitem($id)
     {
-        $product = ProductModel::where('product_id', $id)->first();
-        if ($product) {
-            $product->delete(); // This will now soft delete
-            return redirect()->route('product.index')
-                ->with('success', 'Product moved to archive successfully');
+        try {
+            $product = ProductModel::where('product_id', $id)->first();
+
+            if ($product) {
+                // Store user_id before deletion
+                $userId = $product->userID;
+
+                // Soft delete the product
+                $product->delete();
+
+                // Verify the product was soft deleted
+                if ($product->trashed()) {
+                    \Log::info('Product soft deleted: ', [
+                        'product_id' => $id,
+                        'trashed' => $product->trashed(),
+                        'deleted_at' => $product->deleted_at,
+                    ]);
+
+                    return redirect()->route('product.index', ['user_id' => $userId])
+                        ->with('success', 'Product moved to archive successfully');
+                }
+            }
+
+            return redirect()->route('product.index', ['user_id' => auth()->id()])
+                ->with('error', 'Failed to archive product');
+        } catch (\Exception $e) {
+            return redirect()->route('product.index', ['user_id' => auth()->id()])
+                ->with('error', 'Error archiving product: '.$e->getMessage());
         }
-        return redirect()->route('product.index')
-            ->with('error', 'Product not found');
     }
 
     public function checkProductName(Request $request)
@@ -228,27 +262,52 @@ class ProductWebController extends Controller
 
     public function archive()
     {
-        $archivedProducts = ProductModel::onlyTrashed()->get()->map(function ($product) {
-            return [
-                'product_id' => $product->product_id,
-                'product_name' => $product->product_name,
-                'product_price' => $product->product_price,
-                'product_stock' => $product->product_stock,
-                'description' => $product->description,
-                'product_image' => $product->product_image,
-            ];
-        })->toArray();
+        try {
+            $archivedProducts = ProductModel::onlyTrashed()->get()->map(function ($product) {
+                return [
+                    'product_id' => $product->product_id,
+                    'product_name' => $product->product_name,
+                    'product_price' => $product->product_price,
+                    'product_stock' => $product->product_stock,
+                    'description' => $product->description,
+                    'product_image' => $product->product_image ?? 'default.jpg',
+                    'user_id' => $product->userID,
+                ];
+            })->toArray();
 
-        return view('Pages.Archive.index', compact('archivedProducts'));
+            $userId = auth()->id(); // Get the authenticated user's ID
+
+            return view('Pages.Archive.index', compact('archivedProducts', 'userId'));
+        } catch (\Exception $e) {
+            \Log::error('Archive error: '.$e->getMessage());
+
+            return view('Pages.Archive.index', ['archivedProducts' => [], 'userId' => auth()->id()]);
+        }
     }
 
     public function restore($product_id)
     {
-        ProductModel::onlyTrashed()
-            ->where('product_id', $product_id)
-            ->restore();
+        try {
+            $userId = auth()->id();
+            $product = ProductModel::onlyTrashed()
+                ->where('product_id', $product_id)
+                ->where('userID', $userId)
+                ->first();
 
-        return redirect()->route('product.archive')
-            ->with('success', 'Product restored successfully');
+            if (! $product) {
+                return redirect()->route('product.archive')
+                    ->with('error', 'Product not found in archive');
+            }
+
+            // Restore the product
+            $product->restore();
+
+            return redirect()->route('product.archive')
+                ->with('success', 'Product restored successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('product.archive')
+                ->with('error', 'Error restoring product: '.$e->getMessage());
+        }
     }
+    
 }
