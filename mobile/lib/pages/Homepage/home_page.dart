@@ -82,13 +82,13 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-            // ListTile(
-            //   leading: const Icon(Icons.home),
-            //   title: const Text('Dashboard'),
-            //   onTap: () {
-            //     Navigator.pushNamed(context, '/dashboardpage');
-            //   },
-            // ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Dashboard'),
+              onTap: () {
+                Navigator.pushNamed(context, '/dashboardpage');
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.production_quantity_limits_sharp),
               title: const Text('Products'),

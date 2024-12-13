@@ -70,8 +70,7 @@
                                         style="flex: 1; padding: 8px; background-color: #4b3025; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
                                         Edit
                                     </button>
-                                    <button onclick="return confirm('Are you sure you want to delete this product?')"
-                                        type="submit" form="delete-form-{{ $product['product_id'] }}"
+                                    <button onclick="showDeleteModal('{{ $product['product_id'] }}')"
                                         style="flex: 1; padding: 8px; background-color: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
                                         Delete
                                     </button>
@@ -194,6 +193,26 @@
         <div id="overlay"
             style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999;">
         </div>
+        <div id="delete-modal" class="modal"
+            style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; width: 500px; margin: auto;">
+            <div class="modal-content"
+                style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
+                <h2 style="color: #dc3545; margin-bottom: 20px; text-align: center;">Delete Product</h2>
+                <p style="color: #666; margin-bottom: 20px; text-align: center;">Are you sure you want to delete this
+                    product?</p>
+                <input type="hidden" id="delete-product-id">
+                <div style="display: flex; justify-content: center; gap: 10px;">
+                    <button onclick="confirmDelete()"
+                        style="padding: 10px 20px; background-color: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        Delete
+                    </button>
+                    <button onclick="closeDeleteModal()"
+                        style="padding: 10px 20px; background-color: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -240,90 +259,25 @@
             showModal();
         }
 
-        // document.getElementById('addProductForm').addEventListener('submit', function(e) {
-        //     e.preventDefault();
-
-        //     const formData = new FormData(this);
-        //     const validationErrors = document.getElementById('validation-errors');
-        //     const errorList = validationErrors.querySelector('ul');
-
-        //     // Clear previous errors
-        //     errorList.innerHTML = '';
-        //     validationErrors.style.display = 'none';
-
-        //     fetch(this.action, {
-        //             method: 'POST',
-        //             body: formData,
-        //             credentials: 'same-origin'
-        //         })
-        //         .then(response => {
-        //             if (!response.ok) {
-        //                 throw new Error('Network response was not ok');
-        //             }
-        //             return response.json();
-        //         })
-        //         .then(data => {
-        //             if (data.errors) {
-        //                 // Display validation errors
-        //                 Object.values(data.errors).forEach(error => {
-        //                     const li = document.createElement('li');
-        //                     li.style.color = '#dc2626';
-        //                     li.style.marginBottom = '5px';
-        //                     li.textContent = error[0];
-        //                     errorList.appendChild(li);
-        //                 });
-        //                 validationErrors.style.display = 'block';
-        //             } else {
-        //                 // Close modal and refresh page on success
-        //                 closeEditModal();
-        //                 window.location.reload();
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error('Error:', error);
-        //             const li = document.createElement('li');
-        //             li.style.color = '#dc2626';
-        //             li.textContent = 'ProductName is exist. Please try again.';
-        //             errorList.appendChild(li);
-        //             validationErrors.style.display = 'block';
-        //         });
-        // });
-
         function closeEditModalForm() {
             document.getElementById('edit-modal-form').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
         }
 
-        // document.querySelector('form[action="{{ route('product.update') }}"]').addEventListener('submit', function(e) {
-        //     e.preventDefault();
+        function showDeleteModal(productId) {
+            document.getElementById('delete-product-id').value = productId;
+            document.getElementById('delete-modal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
 
-        //     const formData = new FormData(this);
+        function closeDeleteModal() {
+            document.getElementById('delete-modal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
 
-        //     fetch(this.action, {
-        //             method: 'POST',
-        //             body: formData,
-        //             credentials: 'same-origin'
-        //         })
-        //         .then(response => {
-        //             if (!response.ok) {
-        //                 throw new Error('Network response was not ok');
-        //             }
-        //             return response.json();
-        //         })
-        //         .then(data => {
-        //             if (data.errors) {
-        //                 // Show error message
-        //                 alert('Error updating product: ' + Object.values(data.errors).flat().join('\n'));
-        //             } else {
-        //                 // Close modal and refresh page on success
-        //                 closeEditModalForm();
-        //                 window.location.reload();
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error('Error:', error);
-        //             alert('An error occurred while updating the product');
-        //         });
-        // });
+        function confirmDelete() {
+            const productId = document.getElementById('delete-product-id').value;
+            document.getElementById(`delete-form-${productId}`).submit();
+        }
     </script>
 @endsection

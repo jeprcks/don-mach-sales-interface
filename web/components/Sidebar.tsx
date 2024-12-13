@@ -34,23 +34,23 @@ export default function Sidebar(): JSX.Element {
           alt="Admin Avatar"
           style={styles.avatar}
         />
-        {!collapsed && <h3 style={styles.avatarName}>User</h3>}
+        {!collapsed && <h3 style={styles.avatarName}>Cashier</h3>}
       </div>
 
       {/* Menu Section */}
       <ul style={styles.list}>
-        <li style={styles.listItem}>
+        {/* <li style={styles.listItem}>
           <Link href="/dashboard" style={styles.link}>
             <i style={styles.icon} className="fas fa-tachometer-alt"></i>
             {!collapsed && <span style={styles.linkText}>Dashboard</span>}
           </Link>
-        </li>
-        <li style={styles.listItem}>
+        </li> */}
+        {/* <li style={styles.listItem}>
           <Link href="/product" style={styles.link}>
             <i style={styles.icon} className="fas fa-box"></i>
             {!collapsed && <span style={styles.linkText}>Products</span>}
           </Link>
-        </li>
+        </li> */}
         <li style={styles.listItem}>
           <Link href="/sale" style={styles.link}>
             <i style={styles.icon} className="fas fa-chart-line"></i>

@@ -21,9 +21,7 @@ class ProductWebController extends Controller
 
     public function index($user_id)
     {
-        // dd($user_id);
         $products = $this->registerProducts->findByUserID((int) $user_id);
-        // dd($products);
 
         if (empty($products)) {
             $products = [];
@@ -38,7 +36,6 @@ class ProductWebController extends Controller
                     'product_image' => $product->getProduct_image() ?? 'default.jpg',
                 ];
             }, $products);
-            // dd($products);
         }
 
         return view('Pages.Product.index', compact('products'));
@@ -124,14 +121,18 @@ class ProductWebController extends Controller
 
     public function updateProduct(Request $request)
     {
-        // dd($request->all());
         $validate = Validator::make($request->all(), [
             'user_id' => 'required|integer',
             'productID' => 'required|string',
             'productName' => [
                 'required',
                 'string',
-                Rule::unique('product', 'product_name')->ignore($request->productID, 'product_id'),
+                Rule::unique('product', 'product_name')
+                    ->where(function ($query) use ($request) {
+                        return $query->where('userID', $request->user_id)
+                            ->whereNull('deleted_at');
+                    })
+                    ->ignore($request->productID, 'product_id'),
             ],
             'productPrice' => 'required|numeric',
             'productStock' => 'required|numeric',
@@ -287,19 +288,15 @@ class ProductWebController extends Controller
     public function restore($product_id)
     {
         try {
+            $userId = auth()->id();
             $product = ProductModel::onlyTrashed()
                 ->where('product_id', $product_id)
+                ->where('userID', $userId)
                 ->first();
 
             if (! $product) {
                 return redirect()->route('product.archive')
                     ->with('error', 'Product not found in archive');
-            }
-
-            // Check if the authenticated user owns this product
-            if ($product->userID !== auth()->id()) {
-                return redirect()->route('product.archive')
-                    ->with('error', 'Unauthorized to restore this product');
             }
 
             // Restore the product
@@ -312,4 +309,5 @@ class ProductWebController extends Controller
                 ->with('error', 'Error restoring product: '.$e->getMessage());
         }
     }
+    
 }

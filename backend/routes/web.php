@@ -37,8 +37,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/products/{product_id}/restore', [ProductWebController::class, 'restore'])->name('product.restore');
 
     // Users
+    Route::post('/users/create', [UserWEBController::class, 'store'])->name('users.store');
     Route::get('/users', [UserWEBController::class, 'index'])->name('users.index');
-    Route::post('/users', [UserWEBController::class, 'store'])->name('users.store');
     Route::delete('/users/{id}', [UserWEBController::class, 'destroy'])->name('users.destroy');
     Route::put('/users/{id}', [UserWEBController::class, 'update'])->name('users.update');
 

@@ -31,8 +31,7 @@ class ProductOperationFailure extends ProductState {
   List<Object?> get props => [error];
 }
 
-class SalesPageState extends ProductState{}
-
+class SalesPageState extends ProductState {}
 
 // settings_state.dart
 abstract class SettingsState {}
