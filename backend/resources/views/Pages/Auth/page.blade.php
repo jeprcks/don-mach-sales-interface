@@ -23,16 +23,7 @@
                         </ul>
                     </div>
                 @endif
-
-                @if (session('message'))
-                    <div
-                        class="alert {{ session('message') === 'Login Failed!' ? 'alert-danger' : 'alert-success' }} alert-dismissible fade show">
-                        {{ session('message') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
-                <form action="{{ route('admin.login') }}" method="POST" id="loginForm">
+                <form action="{{ route('admin.login') }}" method="POST">
                     @csrf
                     <div class="card-header border-0 text-center mb-4">
                         <h1 class="display-5" style="color: #6f4e37;">Welcome Back</h1>
@@ -43,9 +34,6 @@
                         <input type="text" name="username"
                             class="form-control border-2 @error('username') is-invalid @enderror"
                             style="background-color: #faf6f1;" id="username" value="{{ old('username') }}">
-                        @error('username')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
                     </div>
 
                     <div class="mb-4">
@@ -54,9 +42,6 @@
                             <input type="password" name="password"
                                 class="form-control border-2 @error('password') is-invalid @enderror"
                                 style="background-color: #faf6f1;" id="password">
-                            @error('password')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
 
@@ -68,43 +53,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('loginForm');
-            const alertMessage = document.querySelector('.alert');
-
-            if (alertMessage) {
-                setTimeout(() => {
-                    alertMessage.classList.remove('show');
-                    setTimeout(() => {
-                        alertMessage.remove();
-                    }, 150);
-                }, 3000);
-            }
-
-            form.addEventListener('submit', function(e) {
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-
-                if (!username || !password) {
-                    e.preventDefault();
-                    const errorDiv = document.createElement('div');
-                    errorDiv.className = 'alert alert-danger alert-dismissible fade show';
-                    errorDiv.innerHTML = `
-                        Please fill in all fields
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    `;
-                    form.insertBefore(errorDiv, form.firstChild);
-
-                    setTimeout(() => {
-                        errorDiv.classList.remove('show');
-                        setTimeout(() => {
-                            errorDiv.remove();
-                        }, 150);
-                    }, 3000);
-                }
-            });
-        });
-    </script>
 @endsection
