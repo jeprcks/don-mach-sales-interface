@@ -63,33 +63,36 @@ export default function Sales(): JSX.Element {
                 </div>
 
                 {/* Debug info */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {products && products.map((product) => (
-                        <div key={product.product_id}
-                            className="product-card bg-white rounded-lg shadow-lg overflow-hidden hover:transform hover:-translate-y-1 transition-transform duration-200"
-                        >
-                            <div className="relative h-[200px] bg-[#fff8e7] border-b border-gray-200">
-                                <Image
-                                    src={`http://localhost:8000/images/${product.product_image}`}
-                                    alt={product.product_name}
-                                    fill
-                                    className="object-contain p-4"
-                                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                                />
+                <div className="flex justify-center items-center min-h-screen">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {products && products.map((product) => (
+                            <div key={product.product_id}
+                                className="product-card bg-white rounded-lg shadow-lg overflow-hidden hover:transform hover:-translate-y-1 transition-transform duration-200"
+                            >
+                                <div className="relative w-[200px] h-[200px] bg-[#fff8e7] border-b border-gray-200 mx-auto">
+                                    <Image
+                                        src={`http://localhost:8000/images/${product.product_image}`}
+                                        alt={product.product_name}
+                                        fill
+                                        className="object-cover"
+                                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
+                                    />
+                                </div>
+                                <div className="p-4 text-center">
+                                    <h2 className="text-lg font-bold text-[#4b3025] mb-2">{product.product_name}</h2>
+                                    <p className="text-[#6b4226] text-md font-bold mb-3">₱{product.product_price?.toFixed(2)}</p>
+                                    <button
+                                        onClick={() => addToCart(product)}
+                                        className="w-full bg-[#6b4226] text-white py-2 rounded hover:bg-[#4b3025] transition-colors"
+                                    >
+                                        Add to Cart
+                                    </button>
+                                </div>
                             </div>
-                            <div className="p-4 text-center">
-                                <h2 className="text-xl font-bold text-[#4b3025] mb-2">{product.product_name}</h2>
-                                <p className="text-[#6b4226] text-lg font-bold mb-3">₱{product.product_price?.toFixed(2)}</p>
-                                <button
-                                    onClick={() => addToCart(product)}
-                                    className="w-full bg-[#6b4226] text-white py-2 rounded hover:bg-[#4b3025] transition-colors"
-                                >
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
+
 
                 <div className="bg-white rounded-lg shadow-lg p-6 mt-8">
                     <h2 className="text-2xl font-bold text-[#4b3025] mb-4">Your Cart</h2>
